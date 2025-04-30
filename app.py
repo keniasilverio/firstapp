@@ -6,13 +6,26 @@ from datetime import datetime
 import time
 
 st.set_page_config(layout="wide")
-st.title("⚡️ Dados ENTSO-E - 28 de Abril de 2025 (Helianthus 🌻)")
+st.title("🌻 Helianthus - Dados de Geração ENTSO-E (28/04/2025)")
 
+st.markdown(
+    """
+    Bem-vindo ao painel de geração elétrica da **Helianthus**.  
+    Aqui você pode visualizar os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha no dia **28 de abril de 2025**.
+
+    > Desenvolvido por **Kenia Silverio**  
+    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
+    """
+)
+
+# Token do usuário
 api_key = st.text_input("🔐 Cole seu token ENTSO-E aqui:", type="password")
 
+# Datas da análise (28/04/2025)
 start = pd.Timestamp("2025-04-28 00:00:00", tz="Europe/Brussels")
 end = pd.Timestamp("2025-04-29 00:00:00", tz="Europe/Brussels")
 
+# Países a consultar
 paises = {
     "Portugal": "PT",
     "Espanha": "ES",
@@ -20,6 +33,7 @@ paises = {
     "Alemanha": "DE"
 }
 
+# Função de repetição com espera (para evitar bloqueios)
 def tentar_n_vezes(funcao, tentativas=2, espera=2):
     for i in range(tentativas):
         try:
@@ -30,25 +44,10 @@ def tentar_n_vezes(funcao, tentativas=2, espera=2):
             else:
                 raise e
 
-@st.cache_data(show_spinner=False)
-def consulta_carga(client, nome, code):
-    try:
-        with st.spinner(f"🔋 Carga de {nome}..."):
-            return tentar_n_vezes(lambda: (
-                pd.DataFrame({
-                    "Data": client.query_load(code, start=start, end=end).index,
-                    "MW": client.query_load(code, start=start, end=end).values,
-                    "País": nome
-                })
-            ))
-    except Exception as e:
-        st.warning(f"⚠️ Carga - {nome}: {e}")
-        return pd.DataFrame()
-
-@st.cache_data(show_spinner=False)
+# Consulta geração por país
 def consulta_geracao(client, nome, code):
     try:
-        with st.spinner(f"⚡ Geração de {nome}..."):
+        with st.spinner(f"⚡ Carregando geração de {nome}..."):
             def consulta():
                 gen = client.query_generation(code, start=start, end=end, psr_type=None)
                 if isinstance(gen.columns, pd.MultiIndex):
@@ -61,82 +60,30 @@ def consulta_geracao(client, nome, code):
                 return df_melt
             return tentar_n_vezes(consulta)
     except Exception as e:
-        st.warning(f"⚠️ Geração - {nome}: {e}")
+        st.warning(f"⚠️ Erro ao consultar geração de {nome}: {e}")
         return pd.DataFrame()
 
-@st.cache_data(show_spinner=False)
-def consulta_preco(client, nome, code):
-    try:
-        with st.spinner(f"💶 Preço de {nome}..."):
-            return tentar_n_vezes(lambda: (
-                client.query_day_ahead_prices(code, start=start, end=end)
-                .reset_index()
-                .rename(columns={"MTU (CET)": "Data", 0: "Preço (€/MWh)"})
-                .assign(País=nome)
-            ))
-    except Exception as e:
-        st.warning(f"⚠️ Preço - {nome}: {e}")
-        return pd.DataFrame()
-
-@st.cache_data(show_spinner=False)
-def consulta_fluxo(client):
-    try:
-        with st.spinner("🔁 Fluxos PT ↔ ES..."):
-            def consulta():
-                f1 = client.query_crossborder_flows("PT", "ES", start=start, end=end)
-                f2 = client.query_crossborder_flows("ES", "PT", start=start, end=end)
-                df1 = f1.reset_index()
-                df1.columns = ["Data", "Fluxo (MW)"]
-                df1["Direção"] = "PT → ES"
-                df2 = f2.reset_index()
-                df2.columns = ["Data", "Fluxo (MW)"]
-                df2["Direção"] = "ES → PT"
-                return pd.concat([df1, df2])
-            return tentar_n_vezes(consulta)
-    except Exception as e:
-        st.warning(f"⚠️ Fluxo: {e}")
-        return pd.DataFrame()
-
-# --- Execução
+# Botão para iniciar carregamento
 if api_key:
-    if st.button("🔁 Carregar dados"):
+    if st.button("🔁 Carregar dados de geração"):
         client = EntsoePandasClient(api_key=api_key)
 
-        cargas = pd.concat([consulta_carga(client, n, c) for n, c in paises.items()])
-        geracoes = pd.concat([consulta_geracao(client, n, c) for n, c in paises.items()])
-        precos = pd.concat([consulta_preco(client, n, c) for n, c in paises.items()])
-        fluxos = consulta_fluxo(client)
+        resultados = []
+        for nome, code in paises.items():
+            df = consulta_geracao(client, nome, code)
+            if not df.empty:
+                resultados.append(df)
 
-        tab1, tab2, tab3, tab4 = st.tabs(["📉 Carga", "🔆 Geração", "💶 Preço Spot", "🔁 Fluxo PT ↔ ES"])
+        if resultados:
+            geracao_df = pd.concat(resultados)
+            st.success("Dados de geração carregados com sucesso!")
 
-        with tab1:
-            st.subheader("📉 Carga por país")
-            if not cargas.empty:
-                st.dataframe(cargas.head())
-                fig = px.line(cargas, x="Data", y="MW", color="País", title="Carga elétrica", markers=True)
-                st.plotly_chart(fig, use_container_width=True)
-
-        with tab2:
             st.subheader("🔆 Geração por tipo e país")
-            if not geracoes.empty:
-                pais_sel = st.selectbox("Escolha o país", geracoes["País"].unique().tolist())
-                df_g = geracoes[geracoes["País"] == pais_sel]
-                fig = px.area(df_g, x="Data", y="MW", color="Fonte", title=f"Geração - {pais_sel}")
-                st.plotly_chart(fig, use_container_width=True)
-
-        with tab3:
-            st.subheader("💶 Preço Day-Ahead")
-            if not precos.empty:
-                fig = px.line(precos, x="Data", y="Preço (€/MWh)", color="País", title="Preço Spot", markers=True)
-                st.plotly_chart(fig, use_container_width=True)
-
-        with tab4:
-            st.subheader("🔁 Fluxo de energia - PT ↔ ES")
-            if not fluxos.empty:
-                fig = px.line(fluxos, x="Data", y="Fluxo (MW)", color="Direção", title="Fluxo PT ↔ ES")
-                st.plotly_chart(fig, use_container_width=True)
-
-    else:
-        st.info("Clique em '🔁 Carregar dados' para iniciar a consulta.")
+            pais_sel = st.selectbox("Escolha o país", geracao_df["País"].unique().tolist())
+            df_pais = geracao_df[geracao_df["País"] == pais_sel]
+            fig = px.area(df_pais, x="Data", y="MW", color="Fonte", title=f"Geração elétrica - {pais_sel}")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("Nenhum dado de geração foi retornado.")
 else:
-    st.info("Insira seu token da ENTSO-E para habilitar o botão.")
+    st.info("Insira seu token acima para habilitar o botão.")
