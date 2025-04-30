@@ -11,7 +11,7 @@ st.title("⚡️ Dados ENTSO-E - 28 de Abril de 2025 (Helianthus 🌻)")
 # Token
 api_key = st.text_input("🔐 Cole seu token ENTSO-E aqui:", type="password")
 
-# Datas com timezone
+# Datas com timezone Europe/Brussels (usada pela ENTSO-E)
 start = pd.Timestamp("2025-04-28 00:00:00", tz="Europe/Brussels")
 end = pd.Timestamp("2025-04-29 00:00:00", tz="Europe/Brussels")
 
@@ -28,61 +28,54 @@ def carregar_dados(api_key):
     cargas, geracoes, precos, fluxos = [], [], [], []
 
     for nome, code in paises.items():
+        # --- Carga
         try:
-            # Carga
             carga = client.query_load(code, start=start, end=end)
             df_carga = carga.reset_index()
             df_carga.columns = ["Data", "MW"]
             df_carga["País"] = nome
             cargas.append(df_carga)
+        except Exception as e:
+            st.warning(f"⚠️ Falha ao carregar carga de {nome}: {e}")
 
-            # Geração
+        # --- Geração
+        try:
             gen = client.query_generation(code, start=start, end=end, psr_type=None)
-            df_gen = gen.reset_index().melt(
-                id_vars=gen.reset_index().columns[0],  # coluna de data
-                var_name="Tipo",
-                value_name="MW"
-            )
+            # Se MultiIndex nas colunas, remover
+            if isinstance(gen.columns, pd.MultiIndex):
+                gen.columns = gen.columns.get_level_values(0)
+            df_gen = gen.reset_index().melt(id_vars="datetime", var_name="Tipo", value_name="MW")
             df_gen.columns = ["Data", "Fonte", "MW"]
             df_gen["País"] = nome
             geracoes.append(df_gen)
+        except Exception as e:
+            st.warning(f"⚠️ Falha ao carregar geração de {nome}: {e}")
 
-            # Preço spot
+        # --- Preço spot
+        try:
             preco = client.query_day_ahead_prices(code, start=start, end=end)
             df_preco = preco.reset_index()
             df_preco.columns = ["Data", "Preço (€/MWh)"]
             df_preco["País"] = nome
             precos.append(df_preco)
-
         except Exception as e:
-            st.warning(f"Erro com {nome}: {e}")
+            st.warning(f"⚠️ Falha ao carregar preço de {nome}: {e}")
 
-    # Fluxos PT ↔ ES
+    # --- Fluxo PT ↔ ES
     try:
-        fluxo1 = client.query_crossborder_flows(
-            country_code_from="PT",
-            country_code_to="ES",
-            start=start,
-            end=end
-        )
+        fluxo1 = client.query_crossborder_flows("PT", "ES", start=start, end=end)
         df_fluxo1 = fluxo1.reset_index()
         df_fluxo1.columns = ["Data", "Fluxo (MW)"]
         df_fluxo1["Direção"] = "PT → ES"
 
-        fluxo2 = client.query_crossborder_flows(
-            country_code_from="ES",
-            country_code_to="PT",
-            start=start,
-            end=end
-        )
+        fluxo2 = client.query_crossborder_flows("ES", "PT", start=start, end=end)
         df_fluxo2 = fluxo2.reset_index()
         df_fluxo2.columns = ["Data", "Fluxo (MW)"]
         df_fluxo2["Direção"] = "ES → PT"
 
         fluxos.extend([df_fluxo1, df_fluxo2])
-
     except Exception as e:
-        st.warning(f"Erro nos fluxos PT↔ES: {e}")
+        st.warning(f"⚠️ Falha nos fluxos PT↔ES: {e}")
 
     return (
         pd.concat(cargas) if cargas else pd.DataFrame(),
