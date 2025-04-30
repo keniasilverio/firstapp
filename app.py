@@ -60,7 +60,7 @@ with tab2:
     st.header("📉 Carga - Blackout 2025")
     try:
         df_carga = pd.read_excel("carga_blackout_2025_dados.xlsx")
-        df_carga = df_carga.rename(columns={"Unnamed: 0": "Data", "Actual Load": "Carga (MW)"})
+        df_carga = df_carga.rename(columns={"TIME": "Data", "Actual Load": "Carga (MW)"})
 
         st.info(f"📅 Período disponível: de {df_carga['Data'].min()} até {df_carga['Data'].max()}")
 
