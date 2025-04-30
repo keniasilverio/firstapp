@@ -18,7 +18,7 @@ st.markdown(
     - 💶 Preço spot (day-ahead)
 
     > Desenvolvido por **Kenia Silverio**  
-    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
+    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silv%C3%A9rio-2b391bb7)
     '''
 )
 
