@@ -5,7 +5,29 @@ import plotly.express as px
 st.set_page_config(layout="wide")
 st.title("⚡️ Painel Energético Europeu - Dados Locais (Helianthus 🌻)")
 
-tab1, tab2, tab3 = st.tabs(["🔆 Geração", "📉 Carga (Load)", "🔀 Fluxo PT ↔ ES"])
+# === TABS ===
+tab0, tab1, tab2, tab3 = st.tabs([
+    "📘 Sobre o projeto",
+    "🔆 Geração",
+    "📉 Carga (Load)",
+    "🔀 Fluxo PT ↔ ES"
+])
+
+# --- Aba 0: Sobre o Projeto
+with tab0:
+    st.header("📘 Bem-vindo ao Painel Helianthus")
+    st.markdown("""
+    Este painel apresenta dados energéticos reais ou simulados da Europa, com foco em:
+
+    - Geração elétrica por tipo
+    - Carga total dos sistemas (Load)
+    - Fluxos transfronteiriços (ex: Portugal ↔ Espanha)
+
+    Os dados são atualizados manualmente a partir de arquivos locais, até que a integração com a API da ENTSO-E esteja completa.
+
+    **Desenvolvido por:** Helianthus ☀️  
+    **Contato:** [linkedin.com/in/kenia-silverio](https://www.linkedin.com/in/kenia-silverio)
+    """)
 
 # --- Aba 1: Geração
 with tab1:
@@ -28,28 +50,32 @@ with tab1:
             title=f"Geração por tipo em {pais}"
         )
         st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("💡 **Observação**: Geração com predominância de fontes renováveis indica boa performance ambiental.")
     except Exception as e:
         st.error(f"Erro ao carregar dados de geração: {e}")
 
 # --- Aba 2: Carga
 with tab2:
-    st.header("📉 Carga por país - Blackout 2025")
+    st.header("📉 Carga - Blackout 2025")
     try:
         df_carga = pd.read_excel("carga_blackout_2025_dados.xlsx")
-        st.info(f"📅 Período disponível: de {df_carga['Data'].min()} até {df_carga['Data'].max()}")
-        pais_c = st.selectbox("Selecione o país:", df_carga["País"].unique())
-        df_c = df_carga[df_carga["País"] == pais_c]
+        df_carga = df_carga.rename(columns={"Unnamed: 0": "Data", "Actual Load": "Carga (MW)"})
 
-        st.dataframe(df_c.head())
+        st.info(f"📅 Período disponível: de {df_carga['Data'].min()} até {df_carga['Data'].max()}")
+
+        st.dataframe(df_carga.head())
 
         fig_c = px.line(
-            df_c,
+            df_carga,
             x="Data",
             y="Carga (MW)",
-            title=f"Carga elétrica em {pais_c} - 2025",
+            title="Carga elétrica durante o blackout de 2025",
             markers=True
         )
         st.plotly_chart(fig_c, use_container_width=True)
+
+        st.markdown("⚠️ **Insight**: Observe os picos e quedas bruscas de carga — podem indicar instabilidade.")
     except Exception as e:
         st.error(f"Erro ao carregar dados de carga: {e}")
 
@@ -73,5 +99,7 @@ with tab3:
             markers=True
         )
         st.plotly_chart(fig_f, use_container_width=True)
+
+        st.markdown("🌍 **Nota**: Fluxos equilibrados entre os países são sinais de estabilidade e boa interconexão.")
     except Exception as e:
         st.error(f"Erro ao carregar dados de fluxo: {e}")
