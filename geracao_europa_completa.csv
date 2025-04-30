@@ -1,0 +1,169 @@
+País,Data,Tipo,Quantidade (MWh)
+Alemanha,2025-04-24,Solar,2119
+Alemanha,2025-04-24,Wind Offshore,17333
+Alemanha,2025-04-24,Wind Onshore,44596
+Alemanha,2025-04-24,Hydro,17551
+Alemanha,2025-04-24,Gas,7221
+Alemanha,2025-04-24,Nuclear,3819
+Alemanha,2025-04-25,Solar,23889
+Alemanha,2025-04-25,Wind Offshore,1192
+Alemanha,2025-04-25,Wind Onshore,10613
+Alemanha,2025-04-25,Hydro,8527
+Alemanha,2025-04-25,Gas,26872
+Alemanha,2025-04-25,Nuclear,14571
+Alemanha,2025-04-26,Solar,15261
+Alemanha,2025-04-26,Wind Offshore,14811
+Alemanha,2025-04-26,Wind Onshore,41203
+Alemanha,2025-04-26,Hydro,6816
+Alemanha,2025-04-26,Gas,24984
+Alemanha,2025-04-26,Nuclear,4822
+Alemanha,2025-04-27,Solar,31862
+Alemanha,2025-04-27,Wind Offshore,11881
+Alemanha,2025-04-27,Wind Onshore,13709
+Alemanha,2025-04-27,Hydro,29510
+Alemanha,2025-04-27,Gas,43461
+Alemanha,2025-04-27,Nuclear,19309
+Alemanha,2025-04-28,Solar,37254
+Alemanha,2025-04-28,Wind Offshore,31081
+Alemanha,2025-04-28,Wind Onshore,10459
+Alemanha,2025-04-28,Hydro,50359
+Alemanha,2025-04-28,Gas,5943
+Alemanha,2025-04-28,Nuclear,29299
+Alemanha,2025-04-29,Solar,3456
+Alemanha,2025-04-29,Wind Offshore,34784
+Alemanha,2025-04-29,Wind Onshore,22670
+Alemanha,2025-04-29,Hydro,15112
+Alemanha,2025-04-29,Gas,20400
+Alemanha,2025-04-29,Nuclear,47880
+Alemanha,2025-04-30,Solar,50739
+Alemanha,2025-04-30,Wind Offshore,18200
+Alemanha,2025-04-30,Wind Onshore,34672
+Alemanha,2025-04-30,Hydro,33320
+Alemanha,2025-04-30,Gas,20824
+Alemanha,2025-04-30,Nuclear,39909
+França,2025-04-24,Solar,32451
+França,2025-04-24,Wind Offshore,4236
+França,2025-04-24,Wind Onshore,27635
+França,2025-04-24,Hydro,33196
+França,2025-04-24,Gas,31353
+França,2025-04-24,Nuclear,13105
+França,2025-04-25,Solar,37559
+França,2025-04-25,Wind Offshore,42639
+França,2025-04-25,Wind Onshore,35307
+França,2025-04-25,Hydro,6759
+França,2025-04-25,Gas,16272
+França,2025-04-25,Nuclear,25190
+França,2025-04-26,Solar,39447
+França,2025-04-26,Wind Offshore,34240
+França,2025-04-26,Wind Onshore,46984
+França,2025-04-26,Hydro,4971
+França,2025-04-26,Gas,9647
+França,2025-04-26,Nuclear,11269
+França,2025-04-27,Solar,29819
+França,2025-04-27,Wind Offshore,22223
+França,2025-04-27,Wind Onshore,34177
+França,2025-04-27,Hydro,42194
+França,2025-04-27,Gas,16290
+França,2025-04-27,Nuclear,3073
+França,2025-04-28,Solar,20523
+França,2025-04-28,Wind Offshore,39390
+França,2025-04-28,Wind Onshore,14686
+França,2025-04-28,Hydro,30506
+França,2025-04-28,Gas,8374
+França,2025-04-28,Nuclear,46478
+França,2025-04-29,Solar,29083
+França,2025-04-29,Wind Offshore,24349
+França,2025-04-29,Wind Onshore,7040
+França,2025-04-29,Hydro,14890
+França,2025-04-29,Gas,43900
+França,2025-04-29,Nuclear,9414
+França,2025-04-30,Solar,4852
+França,2025-04-30,Wind Offshore,6003
+França,2025-04-30,Wind Onshore,26686
+França,2025-04-30,Hydro,28013
+França,2025-04-30,Gas,22197
+França,2025-04-30,Nuclear,46396
+Portugal,2025-04-24,Solar,1575
+Portugal,2025-04-24,Wind Offshore,45636
+Portugal,2025-04-24,Wind Onshore,24371
+Portugal,2025-04-24,Hydro,29281
+Portugal,2025-04-24,Gas,28009
+Portugal,2025-04-24,Nuclear,18535
+Portugal,2025-04-25,Solar,6402
+Portugal,2025-04-25,Wind Offshore,3510
+Portugal,2025-04-25,Wind Onshore,44189
+Portugal,2025-04-25,Hydro,4123
+Portugal,2025-04-25,Gas,24902
+Portugal,2025-04-25,Nuclear,17594
+Portugal,2025-04-26,Solar,3671
+Portugal,2025-04-26,Wind Offshore,40331
+Portugal,2025-04-26,Wind Onshore,16676
+Portugal,2025-04-26,Hydro,35746
+Portugal,2025-04-26,Gas,43326
+Portugal,2025-04-26,Nuclear,41900
+Portugal,2025-04-27,Solar,14675
+Portugal,2025-04-27,Wind Offshore,37134
+Portugal,2025-04-27,Wind Onshore,25880
+Portugal,2025-04-27,Hydro,24110
+Portugal,2025-04-27,Gas,22017
+Portugal,2025-04-27,Nuclear,40623
+Portugal,2025-04-28,Solar,39672
+Portugal,2025-04-28,Wind Offshore,10509
+Portugal,2025-04-28,Wind Onshore,46224
+Portugal,2025-04-28,Hydro,16572
+Portugal,2025-04-28,Gas,12132
+Portugal,2025-04-28,Nuclear,32594
+Portugal,2025-04-29,Solar,36095
+Portugal,2025-04-29,Wind Offshore,20253
+Portugal,2025-04-29,Wind Onshore,22774
+Portugal,2025-04-29,Hydro,31253
+Portugal,2025-04-29,Gas,45124
+Portugal,2025-04-29,Nuclear,50722
+Portugal,2025-04-30,Solar,17483
+Portugal,2025-04-30,Wind Offshore,3063
+Portugal,2025-04-30,Wind Onshore,42134
+Portugal,2025-04-30,Hydro,12567
+Portugal,2025-04-30,Gas,24070
+Portugal,2025-04-30,Nuclear,8929
+Espanha,2025-04-24,Solar,27178
+Espanha,2025-04-24,Wind Offshore,39127
+Espanha,2025-04-24,Wind Onshore,10902
+Espanha,2025-04-24,Hydro,17537
+Espanha,2025-04-24,Gas,6875
+Espanha,2025-04-24,Nuclear,17687
+Espanha,2025-04-25,Solar,10090
+Espanha,2025-04-25,Wind Offshore,16670
+Espanha,2025-04-25,Wind Onshore,14516
+Espanha,2025-04-25,Hydro,10197
+Espanha,2025-04-25,Gas,32238
+Espanha,2025-04-25,Nuclear,43458
+Espanha,2025-04-26,Solar,41907
+Espanha,2025-04-26,Wind Offshore,45215
+Espanha,2025-04-26,Wind Onshore,25448
+Espanha,2025-04-26,Hydro,11536
+Espanha,2025-04-26,Gas,47096
+Espanha,2025-04-26,Nuclear,28593
+Espanha,2025-04-27,Solar,36049
+Espanha,2025-04-27,Wind Offshore,8056
+Espanha,2025-04-27,Wind Onshore,38195
+Espanha,2025-04-27,Hydro,22183
+Espanha,2025-04-27,Gas,17862
+Espanha,2025-04-27,Nuclear,31655
+Espanha,2025-04-28,Solar,15711
+Espanha,2025-04-28,Wind Offshore,2760
+Espanha,2025-04-28,Wind Onshore,3534
+Espanha,2025-04-28,Hydro,3143
+Espanha,2025-04-28,Gas,44639
+Espanha,2025-04-28,Nuclear,49609
+Espanha,2025-04-29,Solar,24674
+Espanha,2025-04-29,Wind Offshore,12838
+Espanha,2025-04-29,Wind Onshore,47127
+Espanha,2025-04-29,Hydro,22882
+Espanha,2025-04-29,Gas,18387
+Espanha,2025-04-29,Nuclear,43622
+Espanha,2025-04-30,Solar,33037
+Espanha,2025-04-30,Wind Offshore,9743
+Espanha,2025-04-30,Wind Onshore,46347
+Espanha,2025-04-30,Hydro,28348
+Espanha,2025-04-30,Gas,41187
+Espanha,2025-04-30,Nuclear,24935
