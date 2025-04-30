@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from entsoe import EntsoePandasClient
-from datetime import datetime, timedelta
+from datetime import datetime
+import pytz
 
 st.set_page_config(layout="wide")
 st.title("⚡️ Dados ENTSO-E - 28 de Abril de 2025 (Helianthus 🌻)")
@@ -10,9 +11,9 @@ st.title("⚡️ Dados ENTSO-E - 28 de Abril de 2025 (Helianthus 🌻)")
 # Token
 api_key = st.text_input("🔐 Cole seu token ENTSO-E aqui:", type="password")
 
-# Datas no timezone correto exigido pela ENTSO-E
-start = pd.Timestamp("2025-04-28T00:00:00", tz="Europe/Brussels")
-end = pd.Timestamp("2025-04-29T00:00:00", tz="Europe/Brussels")
+# Datas com timezone
+start = pd.Timestamp("2025-04-28 00:00:00", tz="Europe/Brussels")
+end = pd.Timestamp("2025-04-29 00:00:00", tz="Europe/Brussels")
 
 @st.cache_data(show_spinner=True)
 def carregar_dados(api_key):
@@ -37,12 +38,16 @@ def carregar_dados(api_key):
 
             # Geração
             gen = client.query_generation(code, start=start, end=end, psr_type=None)
-            df_gen = gen.reset_index().melt(id_vars="index", var_name="Tipo", value_name="MW")
+            df_gen = gen.reset_index().melt(
+                id_vars=gen.reset_index().columns[0],  # coluna de data
+                var_name="Tipo",
+                value_name="MW"
+            )
             df_gen.columns = ["Data", "Fonte", "MW"]
             df_gen["País"] = nome
             geracoes.append(df_gen)
 
-            # Preço day-ahead
+            # Preço spot
             preco = client.query_day_ahead_prices(code, start=start, end=end)
             df_preco = preco.reset_index()
             df_preco.columns = ["Data", "Preço (€/MWh)"]
@@ -52,21 +57,30 @@ def carregar_dados(api_key):
         except Exception as e:
             st.warning(f"Erro com {nome}: {e}")
 
-    # Fluxo entre Portugal e Espanha
+    # Fluxos PT ↔ ES
     try:
-        pt_code = "10YPT-REN------W"
-        es_code = "10YES-REE------0"
-        fluxo1 = client.query_crossborder_flows(in_domain=pt_code, out_domain=es_code, start=start, end=end)
+        fluxo1 = client.query_crossborder_flows(
+            country_code_from="PT",
+            country_code_to="ES",
+            start=start,
+            end=end
+        )
         df_fluxo1 = fluxo1.reset_index()
         df_fluxo1.columns = ["Data", "Fluxo (MW)"]
         df_fluxo1["Direção"] = "PT → ES"
 
-        fluxo2 = client.query_crossborder_flows(in_domain=es_code, out_domain=pt_code, start=start, end=end)
+        fluxo2 = client.query_crossborder_flows(
+            country_code_from="ES",
+            country_code_to="PT",
+            start=start,
+            end=end
+        )
         df_fluxo2 = fluxo2.reset_index()
         df_fluxo2.columns = ["Data", "Fluxo (MW)"]
         df_fluxo2["Direção"] = "ES → PT"
 
         fluxos.extend([df_fluxo1, df_fluxo2])
+
     except Exception as e:
         st.warning(f"Erro nos fluxos PT↔ES: {e}")
 
@@ -77,7 +91,7 @@ def carregar_dados(api_key):
         pd.concat(fluxos) if fluxos else pd.DataFrame()
     )
 
-# Executa o app se houver token
+# EXECUÇÃO
 if api_key:
     carga_df, geracao_df, preco_df, fluxo_df = carregar_dados(api_key)
 
