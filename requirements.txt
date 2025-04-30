@@ -3,5 +3,5 @@ pandas
 matplotlib
 plotly
 openpyxl
-
+entsoe-py
 
