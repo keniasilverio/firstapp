@@ -11,7 +11,9 @@ tab1, tab2, tab3 = st.tabs(["🔆 Geração", "📉 Carga (Load)", "🔀 Fluxo P
 with tab1:
     st.header("🔆 Geração por tipo - Europa")
     try:
-        df_geracao = pd.read_csv("geracao_europa_completa.csv")
+        df_geracao = pd.read_excel("generation_2025-04-28_cleaned.xlsx")
+        data_disponivel = df_geracao["Data"].unique()
+        st.info(f"📅 Dados referentes ao dia: {data_disponivel[0]}")
         pais = st.selectbox("Selecione o país:", df_geracao["País"].unique())
         df_p = df_geracao[df_geracao["País"] == pais]
 
@@ -34,6 +36,7 @@ with tab2:
     st.header("📉 Carga por país - Blackout 2025")
     try:
         df_carga = pd.read_excel("carga_blackout_2025_dados.xlsx")
+        st.info(f"📅 Período disponível: de {df_carga['Data'].min()} até {df_carga['Data'].max()}")
         pais_c = st.selectbox("Selecione o país:", df_carga["País"].unique())
         df_c = df_carga[df_carga["País"] == pais_c]
 
@@ -55,9 +58,10 @@ with tab3:
     st.header("🔀 Fluxo transfronteiriço: Portugal ↔ Espanha")
     try:
         df1 = pd.read_excel("crossborder_detailed_PT_ES_2025-04-27.xlsx")
-        df2 = pd.read_excel("crossborder_detailed_PT_ES_2025-04-28.xlsx")
+        df2 = pd.read_excel("crossborder_flows_PT_ES_2025-04-28.xlsx")
         df_fluxo = pd.concat([df1, df2])
-        
+        st.info(f"📅 Período analisado: de {df_fluxo['Data'].min()} até {df_fluxo['Data'].max()}")
+
         st.dataframe(df_fluxo.head())
 
         fig_f = px.line(
