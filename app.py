@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 st.set_page_config(layout="centered")
 st.title("⚡️ Análise de Energia na Europa com Helianthus 🌻")
@@ -20,17 +20,20 @@ if opcao == "Geração por tipo":
     pais_selecionado = st.selectbox("Selecione o país:", paises)
 
     df_filtrado = df[df["País"] == pais_selecionado]
-    df_pivot = df_filtrado.pivot_table(index="Data", columns="Tipo", values="Quantidade (MWh)", aggfunc="sum")
 
     st.subheader(f"Tabela de geração - {pais_selecionado}")
     st.dataframe(df_filtrado.head(20))
 
     st.subheader("📊 Geração por tipo de fonte")
-    fig, ax = plt.subplots(figsize=(10, 5))
-    df_pivot.plot(kind="bar", stacked=True, ax=ax)
-    ax.set_ylabel("MWh")
-    ax.set_title(f"Geração elétrica em {pais_selecionado}")
-    st.pyplot(fig)
+    fig = px.bar(
+        df_filtrado,
+        x="Data",
+        y="Quantidade (MWh)",
+        color="Tipo",
+        title=f"Geração elétrica em {pais_selecionado}",
+        barmode="stack"
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 # FLUXO
 else:
@@ -43,15 +46,17 @@ else:
     pais_fluxo = st.selectbox("Selecione o país:", paises_fluxo, key="fluxo")
 
     df_f = df_fluxo[df_fluxo["País"] == pais_fluxo]
-    df_pivot_fluxo = df_f.pivot_table(index="Data", columns="Métrica", values="Quantidade (MWh)", aggfunc="sum")
 
     st.subheader(f"Tabela de fluxo energético - {pais_fluxo}")
     st.dataframe(df_f.head(20))
 
     st.subheader("📊 Carga, importação e exportação")
-    fig2, ax2 = plt.subplots(figsize=(10, 5))
-    df_pivot_fluxo.plot(kind="line", marker='o', ax=ax2)
-    ax2.set_ylabel("MWh")
-    ax2.set_title(f"Fluxo de energia em {pais_fluxo}")
-    st.pyplot(fig2)
-
+    fig2 = px.line(
+        df_f,
+        x="Data",
+        y="Quantidade (MWh)",
+        color="Métrica",
+        markers=True,
+        title=f"Fluxo de energia em {pais_fluxo}"
+    )
+    st.plotly_chart(fig2, use_container_width=True)
