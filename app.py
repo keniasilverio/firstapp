@@ -9,17 +9,17 @@ st.set_page_config(layout="wide")
 st.title("🌻 Helianthus - Painel ENTSO-E (28/04/2025)")
 
 st.markdown(
-    """
+    '''
     Bem-vindo ao painel de energia da **Helianthus**.  
-    Aqui você pode visualizar os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha no dia **28 de abril de 2025**:
+    Veja os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha no dia **28 de abril de 2025**:
 
     - 🔆 Geração por tipo (fonte)
     - 🔋 Carga elétrica total (load)
     - 💶 Preço spot (day-ahead)
 
     > Desenvolvido por **Kenia Silverio**  
-    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silv%C3%A9rio-2b391bb7/)
-    """
+    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
+    '''
 )
 
 api_key = st.text_input("🔐 Cole seu token ENTSO-E aqui:", type="password")
@@ -89,49 +89,42 @@ def consulta_preco(client, nome, code):
         st.warning(f"⚠️ Preço - {nome}: {e}")
         return pd.DataFrame()
 
-# --- Botão de carregamento
 if api_key:
-    if st.button("🔁 Carregar dados de geração, carga e preço"):
-        client = EntsoePandasClient(api_key=api_key)
+    client = EntsoePandasClient(api_key=api_key)
 
-        st.subheader("🔄 Carregando dados da ENTSO-E...")
-        geracoes, cargas, precos = [], [], []
+    # Botões separados para cada tipo de dado
+    col1, col2, col3 = st.columns(3)
 
-        for nome, code in paises.items():
-            geracoes.append(consulta_geracao(client, nome, code))
-            cargas.append(consulta_load(client, nome, code))
-            precos.append(consulta_preco(client, nome, code))
-
-        # --- Visualização em abas
-        tab1, tab2, tab3 = st.tabs(["🔆 Geração", "🔋 Carga", "💶 Preço"])
-
-        with tab1:
+    if col1.button("🔆 Carregar Geração"):
+        geracoes = [consulta_geracao(client, n, c) for n, c in paises.items()]
+        df_g = pd.concat([df for df in geracoes if not df.empty])
+        if not df_g.empty:
             st.subheader("🔆 Geração por tipo e país")
-            df_g = pd.concat(geracoes)
-            if not df_g.empty:
-                pais_sel = st.selectbox("Escolha o país", df_g["País"].unique().tolist())
-                graf = df_g[df_g["País"] == pais_sel]
-                fig = px.area(graf, x="Data", y="MW", color="Fonte", title=f"Geração - {pais_sel}")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.warning("Nenhum dado de geração retornado.")
+            pais_sel = st.selectbox("Escolha o país", df_g["País"].unique().tolist())
+            graf = df_g[df_g["País"] == pais_sel]
+            fig = px.area(graf, x="Data", y="MW", color="Fonte", title=f"Geração - {pais_sel}")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("Nenhum dado de geração retornado.")
 
-        with tab2:
+    if col2.button("🔋 Carregar Carga"):
+        cargas = [consulta_load(client, n, c) for n, c in paises.items()]
+        df_l = pd.concat([df for df in cargas if not df.empty])
+        if not df_l.empty:
             st.subheader("🔋 Carga por país")
-            df_l = pd.concat(cargas)
-            if not df_l.empty:
-                fig2 = px.line(df_l, x="Data", y="MW", color="País", title="Carga total", markers=True)
-                st.plotly_chart(fig2, use_container_width=True)
-            else:
-                st.warning("Nenhum dado de carga retornado.")
+            fig2 = px.line(df_l, x="Data", y="MW", color="País", title="Carga total", markers=True)
+            st.plotly_chart(fig2, use_container_width=True)
+        else:
+            st.warning("Nenhum dado de carga retornado.")
 
-        with tab3:
-            st.subheader("💶 Preço spot por país")
-            df_p = pd.concat(precos)
-            if not df_p.empty:
-                fig3 = px.line(df_p, x=df_p.columns[0], y="Preço (€/MWh)", color="País", title="Preço Spot", markers=True)
-                st.plotly_chart(fig3, use_container_width=True)
-            else:
-                st.warning("Nenhum dado de preço retornado.")
+    if col3.button("💶 Carregar Preço Spot"):
+        precos = [consulta_preco(client, n, c) for n, c in paises.items()]
+        df_p = pd.concat([df for df in precos if not df.empty])
+        if not df_p.empty:
+            st.subheader("💶 Preço Spot por país")
+            fig3 = px.line(df_p, x=df_p.columns[0], y="Preço (€/MWh)", color="País", title="Preço Spot", markers=True)
+            st.plotly_chart(fig3, use_container_width=True)
+        else:
+            st.warning("Nenhum dado de preço retornado.")
 else:
-    st.info("Insira seu token para carregar os dados da ENTSO-E.")
+    st.info("Insira seu token da ENTSO-E para habilitar os botões.")
