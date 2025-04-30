@@ -14,7 +14,7 @@ st.markdown(
     Aqui você pode visualizar os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha no dia **28 de abril de 2025**.
 
     > Desenvolvido por **Kenia Silverio**  
-    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
+    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silv%C3%A9rio-2b391bb7/)
     """
 )
 
