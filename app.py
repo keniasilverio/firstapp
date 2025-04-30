@@ -18,7 +18,7 @@ st.markdown(
     - 💶 Preço spot (day-ahead)
 
     > Desenvolvido por **Kenia Silverio**  
-    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silv%C3%A9rio-2b391bb7/)
+    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
     '''
 )
 
@@ -67,7 +67,9 @@ def consulta_load(client, nome, code):
         with st.spinner(f"🔋 Carga de {nome}..."):
             def consulta():
                 carga = client.query_load(code, start=start, end=end)
-                df = pd.DataFrame({"Data": carga.index, "MW": carga.values})
+                df = pd.DataFrame()
+                df["Data"] = carga.index
+                df["MW"] = list(carga.values)
                 df["País"] = nome
                 return df
             return tentar_n_vezes(consulta)
@@ -88,11 +90,10 @@ def consulta_preco(client, nome, code):
         st.warning(f"⚠️ Preço - {nome}: {e}")
         return pd.DataFrame()
 
-# Inicializa cliente se tiver token
 if api_key:
     client = EntsoePandasClient(api_key=api_key)
 
-    st.markdown("### 🔘 Selecione a informação que deseja carregar:")
+    st.markdown("### 🌻 Selecione a informação que deseja carregar:")
 
     col1, col2, col3 = st.columns(3)
 
@@ -112,8 +113,9 @@ if api_key:
 
     if col2.button("🔋 Carga"):
         cargas = [consulta_load(client, n, c) for n, c in paises.items()]
-        df_l = pd.concat([df for df in cargas if not df.empty], ignore_index=True)
-        if not df_l.empty:
+        cargas_validas = [df for df in cargas if not df.empty]
+        if cargas_validas:
+            df_l = pd.concat(cargas_validas, ignore_index=True)
             st.subheader("🔋 Carga por país")
             fig2 = px.line(df_l, x="Data", y="MW", color="País", title="Carga total", markers=True)
             st.plotly_chart(fig2, use_container_width=True)
@@ -124,8 +126,9 @@ if api_key:
 
     if col3.button("💶 Preço Spot"):
         precos = [consulta_preco(client, n, c) for n, c in paises.items()]
-        df_p = pd.concat([df for df in precos if not df.empty], ignore_index=True)
-        if not df_p.empty:
+        precos_validos = [df for df in precos if not df.empty]
+        if precos_validos:
+            df_p = pd.concat(precos_validos, ignore_index=True)
             st.subheader("💶 Preço Spot por país")
             fig3 = px.line(df_p, x=df_p.columns[0], y="Preço (€/MWh)", color="País", title="Preço Spot", markers=True)
             st.plotly_chart(fig3, use_container_width=True)
