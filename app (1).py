@@ -1,36 +1,73 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
-st.set_page_config(layout="centered")
-st.title("🌍 Análise de Geração Elétrica na Europa")
-st.write("Este app mostra a geração elétrica simulada para Alemanha, França, Portugal e Espanha.")
+st.set_page_config(layout="wide")
+st.title("⚡️ Painel Energético Europeu - Dados Locais (Helianthus 🌻)")
 
-# Carregar dados
-@st.cache_data
-def carregar_dados():
-    return pd.read_csv("geracao_europa_completa.csv")
+tab1, tab2, tab3 = st.tabs(["🔆 Geração", "📉 Carga (Load)", "🔀 Fluxo PT ↔ ES"])
 
-df = carregar_dados()
+# --- Aba 1: Geração
+with tab1:
+    st.header("🔆 Geração por tipo - Europa")
+    try:
+        df_geracao = pd.read_csv("geracao_europa_completa.csv")
+        pais = st.selectbox("Selecione o país:", df_geracao["País"].unique())
+        df_p = df_geracao[df_geracao["País"] == pais]
 
-# Escolha do país
-paises = df["País"].unique().tolist()
-pais_selecionado = st.selectbox("Selecione o país:", paises)
+        st.dataframe(df_p.head())
 
-df_filtrado = df[df["País"] == pais_selecionado]
+        fig = px.bar(
+            df_p,
+            x="Data",
+            y="Quantidade (MWh)",
+            color="Tipo",
+            barmode="stack",
+            title=f"Geração por tipo em {pais}"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados de geração: {e}")
 
-# Pivotar os dados para gráfico
-df_pivot = df_filtrado.pivot_table(index="Data", columns="Tipo", values="Quantidade (MWh)", aggfunc="sum")
+# --- Aba 2: Carga
+with tab2:
+    st.header("📉 Carga por país - Blackout 2025")
+    try:
+        df_carga = pd.read_excel("carga_blackout_2025_dados.xlsx")
+        pais_c = st.selectbox("Selecione o país:", df_carga["País"].unique())
+        df_c = df_carga[df_carga["País"] == pais_c]
 
-# Mostrar tabela
-st.subheader(f"Tabela de geração elétrica - {pais_selecionado}")
-st.dataframe(df_filtrado.head(20))
+        st.dataframe(df_c.head())
 
-# Gráfico de barras empilhadas
-st.subheader("📊 Geração por tipo de fonte")
-fig, ax = plt.subplots(figsize=(10, 5))
-df_pivot.plot(kind="bar", stacked=True, ax=ax)
-ax.set_ylabel("Quantidade (MWh)")
-ax.set_xlabel("Data")
-ax.set_title(f"Geração Elétrica em {pais_selecionado}")
-st.pyplot(fig)
+        fig_c = px.line(
+            df_c,
+            x="Data",
+            y="Carga (MW)",
+            title=f"Carga elétrica em {pais_c} - 2025",
+            markers=True
+        )
+        st.plotly_chart(fig_c, use_container_width=True)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados de carga: {e}")
+
+# --- Aba 3: Fluxo PT ↔ ES
+with tab3:
+    st.header("🔀 Fluxo transfronteiriço: Portugal ↔ Espanha")
+    try:
+        df1 = pd.read_excel("crossborder_detailed_PT_ES_2025-04-27.xlsx")
+        df2 = pd.read_excel("crossborder_detailed_PT_ES_2025-04-28.xlsx")
+        df_fluxo = pd.concat([df1, df2])
+        
+        st.dataframe(df_fluxo.head())
+
+        fig_f = px.line(
+            df_fluxo,
+            x="Data",
+            y="Quantidade (MWh)",
+            color="Direção",
+            title="Importação e Exportação PT ↔ ES (27-28/04/2025)",
+            markers=True
+        )
+        st.plotly_chart(fig_f, use_container_width=True)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados de fluxo: {e}")
