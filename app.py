@@ -1,49 +1,38 @@
 import streamlit as st
 import pandas as pd
-import requests
-from datetime import datetime, timedelta
-import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
 
-st.title("App Helianthus com dados da ENTSO-E 🌻")
+st.set_page_config(layout="centered")
+st.title("🌍 Análise de Geração Elétrica na Europa")
+st.write("Este app mostra a geração elétrica simulada para Alemanha, França, Portugal e Espanha.")
 
-token = st.text_input("Insira seu token da ENTSO-E:", type="password")
+# Carregar dados
+@st.cache_data
+def carregar_dados():
+    return pd.read_csv("geracao_europa_completa.csv")
 
-if token:
-    st.write("🔄 Buscando dados de geração na Alemanha...")
+df = carregar_dados()
 
-    # Datas: últimos 2 dias
-    now = datetime.utcnow()
-    start = (now - timedelta(days=2)).strftime("%Y%m%d%H%M")
-    end = now.strftime("%Y%m%d%H%M")
+# Escolha do país
+paises = df["País"].unique().tolist()
+pais_selecionado = st.selectbox("Selecione o país:", paises)
 
-    # Parâmetros da ENTSO-E API
-    params = {
-        "documentType": "A75",  # geração por tipo
-        "processType": "A16",   # valores reais
-        "outBiddingZone_Domain": "10Y1001A1001A83F",  # Alemanha
-        "periodStart": start,
-        "periodEnd": end,
-        "securityToken": token
-    }
+df_filtrado = df[df["País"] == pais_selecionado]
 
-    url = "https://web-api.transparency.entsoe.eu/api"
+# Pivotar os dados para gráfico
+df_pivot = df_filtrado.pivot_table(index="Data", columns="Tipo", values="Quantidade (MWh)", aggfunc="sum")
 
-    try:
-        response = requests.get(url, params=params)
+# Mostrar tabela
+st.subheader(f"Tabela de geração elétrica - {pais_selecionado}")
+st.dataframe(df_filtrado.head(20))
 
-        if response.status_code == 200:
-            root = ET.fromstring(response.content)
-            rows = []
-            for timeseries in root.findall(".//{*}TimeSeries"):
-                prod_type = timeseries.findtext(".//{*}psrType")
-                for point in timeseries.findall(".//{*}Point"):
-                    position = point.findtext("{*}position")
-                    quantity = point.findtext("{*}quantity")
-                    rows.append((prod_type, position, quantity))
-            df = pd.DataFrame(rows, columns=["Tipo", "Posição", "Quantidade"])
-            st.dataframe(df.head(20))
-        else:
-            st.error("Erro ao buscar dados da ENTSO-E. Verifique seu token.")
-    except Exception as e:
-        st.error(f"Ocorreu um erro: {e}")
+# Gráfico de barras empilhadas
+st.subheader("📊 Geração por tipo de fonte")
+fig, ax = plt.subplots(figsize=(10, 5))
+df_pivot.plot(kind="bar", stacked=True, ax=ax)
+ax.set_ylabel("Quantidade (MWh)")
+ax.set_xlabel("Data")
+ax.set_title(f"Geração Elétrica em {pais_selecionado}")
+st.pyplot(fig)
+
 
