@@ -2,61 +2,72 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(layout="centered")
-st.title("⚡️ Análise de Energia na Europa com Helianthus 🌻")
-st.write("Explore dados simulados de geração, carga, importação e exportação de energia para Alemanha, França, Portugal e Espanha.")
+st.set_page_config(layout="wide")
+st.title("⚡️ Painel Energético Europeu - Dados Locais (Helianthus 🌻)")
 
-# Menu principal
-opcao = st.radio("O que deseja visualizar?", ["Geração por tipo", "Carga / Importação / Exportação"])
+tab1, tab2, tab3 = st.tabs(["🔆 Geração", "📉 Carga (Load)", "🔀 Fluxo PT ↔ ES"])
 
-# GERAÇÃO
-if opcao == "Geração por tipo":
-    @st.cache_data
-    def carregar_geracao():
-        return pd.read_csv("geracao_europa_completa.csv")
+# --- Aba 1: Geração
+with tab1:
+    st.header("🔆 Geração por tipo - Europa")
+    try:
+        df_geracao = pd.read_csv("geracao_europa_completa.csv")
+        pais = st.selectbox("Selecione o país:", df_geracao["País"].unique())
+        df_p = df_geracao[df_geracao["País"] == pais]
 
-    df = carregar_geracao()
-    paises = df["País"].unique().tolist()
-    pais_selecionado = st.selectbox("Selecione o país:", paises)
+        st.dataframe(df_p.head())
 
-    df_filtrado = df[df["País"] == pais_selecionado]
+        fig = px.bar(
+            df_p,
+            x="Data",
+            y="Quantidade (MWh)",
+            color="Tipo",
+            barmode="stack",
+            title=f"Geração por tipo em {pais}"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados de geração: {e}")
 
-    st.subheader(f"Tabela de geração - {pais_selecionado}")
-    st.dataframe(df_filtrado.head(20))
+# --- Aba 2: Carga
+with tab2:
+    st.header("📉 Carga por país - Blackout 2025")
+    try:
+        df_carga = pd.read_excel("carga_blackout_2025_dados.xlsx")
+        pais_c = st.selectbox("Selecione o país:", df_carga["País"].unique())
+        df_c = df_carga[df_carga["País"] == pais_c]
 
-    st.subheader("📊 Geração por tipo de fonte")
-    fig = px.bar(
-        df_filtrado,
-        x="Data",
-        y="Quantidade (MWh)",
-        color="Tipo",
-        title=f"Geração elétrica em {pais_selecionado}",
-        barmode="stack"
-    )
-    st.plotly_chart(fig, use_container_width=True)
+        st.dataframe(df_c.head())
 
-# FLUXO
-else:
-    @st.cache_data
-    def carregar_fluxo():
-        return pd.read_csv("fluxo_energia_europa.csv")
+        fig_c = px.line(
+            df_c,
+            x="Data",
+            y="Carga (MW)",
+            title=f"Carga elétrica em {pais_c} - 2025",
+            markers=True
+        )
+        st.plotly_chart(fig_c, use_container_width=True)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados de carga: {e}")
 
-    df_fluxo = carregar_fluxo()
-    paises_fluxo = df_fluxo["País"].unique().tolist()
-    pais_fluxo = st.selectbox("Selecione o país:", paises_fluxo, key="fluxo")
+# --- Aba 3: Fluxo PT ↔ ES
+with tab3:
+    st.header("🔀 Fluxo transfronteiriço: Portugal ↔ Espanha")
+    try:
+        df1 = pd.read_excel("crossborder_detailed_PT_ES_2025-04-27.xlsx")
+        df2 = pd.read_excel("crossborder_detailed_PT_ES_2025-04-28.xlsx")
+        df_fluxo = pd.concat([df1, df2])
+        
+        st.dataframe(df_fluxo.head())
 
-    df_f = df_fluxo[df_fluxo["País"] == pais_fluxo]
-
-    st.subheader(f"Tabela de fluxo energético - {pais_fluxo}")
-    st.dataframe(df_f.head(20))
-
-    st.subheader("📊 Carga, importação e exportação")
-    fig2 = px.line(
-        df_f,
-        x="Data",
-        y="Quantidade (MWh)",
-        color="Métrica",
-        markers=True,
-        title=f"Fluxo de energia em {pais_fluxo}"
-    )
-    st.plotly_chart(fig2, use_container_width=True)
+        fig_f = px.line(
+            df_fluxo,
+            x="Data",
+            y="Quantidade (MWh)",
+            color="Direção",
+            title="Importação e Exportação PT ↔ ES (27-28/04/2025)",
+            markers=True
+        )
+        st.plotly_chart(fig_f, use_container_width=True)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados de fluxo: {e}")
