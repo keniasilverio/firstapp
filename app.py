@@ -2,19 +2,20 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from entsoe import EntsoePandasClient
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 import time
 
 st.set_page_config(layout="wide")
-st.title("🌻 Helianthus - Painel ENTSO-E (28/04/2025)")
+st.title("🌻 Helianthus - Painel ENTSO-E")
 
 st.markdown(
     '''
     Bem-vindo ao painel de energia da **Helianthus**.  
-    Veja os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha no dia **28 de abril de 2025**:
+    Veja os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha:
 
-    - 🔆 Geração por tipo (fonte)
-    - 🔋 Carga elétrica total (load)
+    - 🔆 Geração por tipo (fonte)  
+    - 🔋 Carga elétrica total (load)  
     - 💶 Preço spot (day-ahead)
 
     > Desenvolvido por **Kenia Silverio**  
@@ -24,8 +25,14 @@ st.markdown(
 
 api_key = st.text_input("🔐 Cole seu token ENTSO-E aqui:", type="password")
 
-start = pd.Timestamp("2025-04-28 00:00:00", tz="Europe/Brussels")
-end = pd.Timestamp("2025-04-29 00:00:00", tz="Europe/Brussels")
+# 📅 Intervalo de datas com padrão da última semana
+hoje = datetime.now()
+data_inicio = hoje - timedelta(days=7)
+start_date, end_date = st.date_input("📅 Escolha o intervalo de datas", value=(data_inicio, hoje), max_value=hoje)
+
+# Converte para timezone Europe/Brussels
+start = pd.Timestamp(start_date, tz="Europe/Brussels")
+end = pd.Timestamp(end_date + timedelta(days=1), tz="Europe/Brussels")
 
 paises = {
     "Portugal": "PT",
