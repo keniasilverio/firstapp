@@ -7,141 +7,144 @@ import pytz
 import time
 
 st.set_page_config(layout="wide")
-st.title("🌻 Helianthus - Painel ENTSO-E")
+st.title("🌻 Helianthus – ENTSO-E Energy Dashboard")
 
 st.markdown(
     '''
-    Bem-vindo ao painel de energia da **Helianthus**.  
-    Veja os dados públicos da ENTSO-E para Portugal, Espanha, França e Alemanha:
+    Welcome to the **Helianthus** energy dashboard.  
+    Explore public data from ENTSO-E for Portugal, Spain, France, and Germany:
 
-    - 🔆 Geração por tipo (fonte)  
-    - 🔋 Carga elétrica total (load)  
-    - 💶 Preço spot (day-ahead)
+    - 🔆 Generation by energy source  
+    - 🔋 Total electricity load  
+    - 💶 Day-ahead spot prices  
 
-    > Desenvolvido por **Kenia Silverio**  
+    > Created by **Kenia Silverio**  
     👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
     '''
 )
 
-api_key = st.text_input("🔐 Cole seu token ENTSO-E aqui:", type="password")
+api_key = st.text_input("🔐 Paste your ENTSO-E API token here:", type="password")
 
-# 📅 Intervalo de datas com padrão da última semana
-hoje = datetime.now()
-data_inicio = hoje - timedelta(days=7)
-start_date, end_date = st.date_input("📅 Escolha o intervalo de datas", value=(data_inicio, hoje), max_value=hoje)
+# 📅 Date range selector (default: last 7 days)
+today = datetime.now()
+default_start = today - timedelta(days=7)
+start_date, end_date = st.date_input(
+    "📅 Select the date range", 
+    value=(default_start, today), 
+    max_value=today
+)
 
-# Converte para timezone Europe/Brussels
+# Timezone conversion
 start = pd.Timestamp(start_date, tz="Europe/Brussels")
 end = pd.Timestamp(end_date + timedelta(days=1), tz="Europe/Brussels")
 
-paises = {
+countries = {
     "Portugal": "PT",
-    "Espanha": "ES",
-    "França": "FR",
-    "Alemanha": "DE"
+    "Spain": "ES",
+    "France": "FR",
+    "Germany": "DE"
 }
 
-def tentar_n_vezes(funcao, tentativas=2, espera=2):
-    for i in range(tentativas):
+def retry_function(func, retries=2, delay=2):
+    for i in range(retries):
         try:
-            return funcao()
+            return func()
         except Exception as e:
-            if i < tentativas - 1:
-                time.sleep(espera)
+            if i < retries - 1:
+                time.sleep(delay)
             else:
                 raise e
 
-def consulta_geracao(client, nome, code):
+def fetch_generation(client, country_name, code):
     try:
-        with st.spinner(f"⚡ Geração de {nome}..."):
-            def consulta():
+        with st.spinner(f"⚡ Loading generation data for {country_name}..."):
+            def call():
                 gen = client.query_generation(code, start=start, end=end, psr_type=None)
                 if isinstance(gen.columns, pd.MultiIndex):
                     gen.columns = gen.columns.get_level_values(0)
                 df = gen.reset_index()
-                index_col = df.columns[0]
-                df_melt = df.melt(id_vars=index_col, var_name="Tipo", value_name="MW")
-                df_melt.columns = ["Data", "Fonte", "MW"]
-                df_melt["País"] = nome
-                return df_melt
-            return tentar_n_vezes(consulta)
-    except Exception as e:
-        st.warning(f"⚠️ Geração - {nome}: {e}")
-        return pd.DataFrame()
-
-def consulta_load(client, nome, code):
-    try:
-        with st.spinner(f"🔋 Carga de {nome}..."):
-            def consulta():
-                carga = client.query_load(code, start=start, end=end)
-                df = pd.DataFrame()
-                df["Data"] = carga.index
-                df["MW"] = list(carga.values)
-                df["País"] = nome
+                df = df.melt(id_vars=df.columns[0], var_name="Source", value_name="MW")
+                df.columns = ["Datetime", "Source", "MW"]
+                df["Country"] = country_name
                 return df
-            return tentar_n_vezes(consulta)
+            return retry_function(call)
     except Exception as e:
-        st.warning(f"⚠️ Carga - {nome}: {e}")
+        st.warning(f"⚠️ Generation - {country_name}: {e}")
         return pd.DataFrame()
 
-def consulta_preco(client, nome, code):
+def fetch_load(client, country_name, code):
     try:
-        with st.spinner(f"💶 Preço de {nome}..."):
-            return tentar_n_vezes(lambda: (
+        with st.spinner(f"🔋 Loading load data for {country_name}..."):
+            def call():
+                load = client.query_load(code, start=start, end=end)
+                df = pd.DataFrame()
+                df["Datetime"] = load.index
+                df["MW"] = list(load.values)
+                df["Country"] = country_name
+                return df
+            return retry_function(call)
+    except Exception as e:
+        st.warning(f"⚠️ Load - {country_name}: {e}")
+        return pd.DataFrame()
+
+def fetch_price(client, country_name, code):
+    try:
+        with st.spinner(f"💶 Loading price data for {country_name}..."):
+            return retry_function(lambda: (
                 client.query_day_ahead_prices(code, start=start, end=end)
                 .reset_index()
-                .rename(columns={0: "Preço (€/MWh)"})
-                .assign(País=nome)
+                .rename(columns={0: "Price (€/MWh)"})
+                .assign(Country=country_name)
             ))
     except Exception as e:
-        st.warning(f"⚠️ Preço - {nome}: {e}")
+        st.warning(f"⚠️ Price - {country_name}: {e}")
         return pd.DataFrame()
 
 if api_key:
     client = EntsoePandasClient(api_key=api_key)
 
-    st.markdown("### 🌻 Selecione a informação que deseja carregar:")
+    st.markdown("### 🌻 Choose what data you want to load:")
 
     col1, col2, col3 = st.columns(3)
 
-    if col1.button("🔆 Geração"):
-        geracoes = [consulta_geracao(client, n, c) for n, c in paises.items()]
-        df_g = pd.concat([df for df in geracoes if not df.empty], ignore_index=True)
-        if not df_g.empty:
-            st.subheader("🔆 Geração por tipo e país")
-            pais_sel = st.selectbox("Escolha o país", df_g["País"].unique().tolist(), key="gen")
-            graf = df_g[df_g["País"] == pais_sel]
-            fig = px.area(graf, x="Data", y="MW", color="Fonte", title=f"Geração - {pais_sel}")
+    if col1.button("🔆 Load Generation"):
+        all_gen = [fetch_generation(client, name, code) for name, code in countries.items()]
+        gen_df = pd.concat([df for df in all_gen if not df.empty], ignore_index=True)
+        if not gen_df.empty:
+            st.subheader("🔆 Generation by Energy Source")
+            selected_country = st.selectbox("Select a country", gen_df["Country"].unique(), key="gen")
+            chart_df = gen_df[gen_df["Country"] == selected_country]
+            fig = px.area(chart_df, x="Datetime", y="MW", color="Source", title=f"Generation - {selected_country}")
             st.plotly_chart(fig, use_container_width=True)
-            csv = df_g.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Baixar CSV de Geração", csv, "geracao.csv", "text/csv")
+            csv = gen_df.to_csv(index=False).encode("utf-8")
+            st.download_button("📥 Download CSV – Generation", csv, "generation.csv", "text/csv")
         else:
-            st.warning("Nenhum dado de geração retornado.")
+            st.warning("No generation data available.")
 
-    if col2.button("🔋 Carga"):
-        cargas = [consulta_load(client, n, c) for n, c in paises.items()]
-        cargas_validas = [df for df in cargas if not df.empty]
-        if cargas_validas:
-            df_l = pd.concat(cargas_validas, ignore_index=True)
-            st.subheader("🔋 Carga por país")
-            fig2 = px.line(df_l, x="Data", y="MW", color="País", title="Carga total", markers=True)
+    if col2.button("🔋 Load Total Load"):
+        all_load = [fetch_load(client, name, code) for name, code in countries.items()]
+        valid_load = [df for df in all_load if not df.empty]
+        if valid_load:
+            load_df = pd.concat(valid_load, ignore_index=True)
+            st.subheader("🔋 Electricity Load by Country")
+            fig2 = px.line(load_df, x="Datetime", y="MW", color="Country", title="Total Load", markers=True)
             st.plotly_chart(fig2, use_container_width=True)
-            csv = df_l.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Baixar CSV de Carga", csv, "carga.csv", "text/csv")
+            csv = load_df.to_csv(index=False).encode("utf-8")
+            st.download_button("📥 Download CSV – Load", csv, "load.csv", "text/csv")
         else:
-            st.warning("Nenhum dado de carga retornado.")
+            st.warning("No load data available.")
 
-    if col3.button("💶 Preço Spot"):
-        precos = [consulta_preco(client, n, c) for n, c in paises.items()]
-        precos_validos = [df for df in precos if not df.empty]
-        if precos_validos:
-            df_p = pd.concat(precos_validos, ignore_index=True)
-            st.subheader("💶 Preço Spot por país")
-            fig3 = px.line(df_p, x=df_p.columns[0], y="Preço (€/MWh)", color="País", title="Preço Spot", markers=True)
+    if col3.button("💶 Load Day-Ahead Prices"):
+        all_prices = [fetch_price(client, name, code) for name, code in countries.items()]
+        valid_prices = [df for df in all_prices if not df.empty]
+        if valid_prices:
+            price_df = pd.concat(valid_prices, ignore_index=True)
+            st.subheader("💶 Day-Ahead Prices by Country")
+            fig3 = px.line(price_df, x=price_df.columns[0], y="Price (€/MWh)", color="Country", title="Spot Prices", markers=True)
             st.plotly_chart(fig3, use_container_width=True)
-            csv = df_p.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Baixar CSV de Preço Spot", csv, "preco_spot.csv", "text/csv")
+            csv = price_df.to_csv(index=False).encode("utf-8")
+            st.download_button("📥 Download CSV – Prices", csv, "prices.csv", "text/csv")
         else:
-            st.warning("Nenhum dado de preço retornado.")
+            st.warning("No price data available.")
 else:
-    st.info("Insira seu token da ENTSO-E para ativar os botões.")
+    st.info("Please enter your ENTSO-E token to activate the dashboard.")
