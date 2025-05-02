@@ -30,11 +30,11 @@ today = datetime.now()
 default_start = today - timedelta(days=7)
 start_date, end_date = st.date_input("📅 Select date range", value=(default_start, today), max_value=today)
 
-# Convert to Europe/Brussels timezone
+# Convert to timezone
 start = pd.Timestamp(start_date, tz="Europe/Brussels")
 end = pd.Timestamp(end_date + timedelta(days=1), tz="Europe/Brussels")
 
-# Country code mapping
+# Country mapping
 country_codes = {
     "Portugal": "PT",
     "Spain": "ES",
@@ -45,7 +45,6 @@ country_codes = {
     "Netherlands": "NL"
 }
 
-# Country selection
 selected_countries = st.multiselect("🌍 Select countries", list(country_codes.keys()), default=["Portugal", "Spain", "France", "Germany"])
 
 def try_multiple_times(function, attempts=2, wait=2):
@@ -107,9 +106,9 @@ if api_key and selected_countries:
     client = EntsoePandasClient(api_key=api_key)
 
     st.markdown("### 🌻 Select the data you want to load:")
-
     col1, col2, col3 = st.columns(3)
 
+    # 🔆 Generation
     if col1.button("🔆 Generation"):
         generation_data = [fetch_generation(client, name, country_codes[name]) for name in selected_countries]
         df_gen = pd.concat([df for df in generation_data if not df.empty], ignore_index=True)
@@ -122,12 +121,18 @@ if api_key and selected_countries:
         else:
             st.warning("No generation data returned.")
 
+    # 🔋 Load
     if col2.button("🔋 Load"):
         load_data = [fetch_load(client, name, country_codes[name]) for name in selected_countries]
         valid_loads = [df for df in load_data if not df.empty]
         if valid_loads:
             df_load = pd.concat(valid_loads, ignore_index=True)
-            st.subheader("🔋 Load")
+
+            # ✅ Correções para colunas
+            df_load["MW"] = df_load["MW"].apply(lambda x: float(str(x).strip("[]")))
+            df_load["Datetime"] = pd.to_datetime(df_load["Datetime"], utc=True)
+
+            st.subheader("🔋 Load by country")
             fig = px.line(df_load, x="Datetime", y="MW", color="Country", title="Total Load", markers=True)
             st.plotly_chart(fig, use_container_width=True)
             csv = df_load.to_csv(index=False).encode("utf-8")
@@ -135,12 +140,13 @@ if api_key and selected_countries:
         else:
             st.warning("No load data returned.")
 
+    # 💶 Day-Ahead Price
     if col3.button("💶 Day-Ahead Prices"):
         price_data = [fetch_price(client, name, country_codes[name]) for name in selected_countries]
         valid_prices = [df for df in price_data if not df.empty]
         if valid_prices:
             df_price = pd.concat(valid_prices, ignore_index=True)
-            st.subheader("💶 Day-Ahead Market Prices")
+            st.subheader("💶 Spot Market Prices by Country")
             fig = px.line(df_price, x=df_price.columns[0], y="Price (€/MWh)", color="Country", title="Day-Ahead Prices", markers=True)
             st.plotly_chart(fig, use_container_width=True)
             csv = df_price.to_csv(index=False).encode("utf-8")
