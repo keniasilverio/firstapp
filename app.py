@@ -8,6 +8,8 @@ import time
 import streamlit.components.v1 as components
 import os
 import requests
+import matplotlib.pyplot as plt
+
 
 st.set_page_config(layout="wide")
 st.title("🌻 Helianthus – ENTSO-E + Solar Insights")
