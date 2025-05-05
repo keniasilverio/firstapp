@@ -5,21 +5,20 @@ from entsoe import EntsoePandasClient
 from datetime import datetime, timedelta
 import pytz
 import time
+import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
-st.title("🌻 Helianthus – ENTSO-E Dashboard")
+st.title("🌻 Helianthus – ENTSO-E + Solar Insights")
 
-# Sidebar com navegação
-sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info"]
+# Sidebar menu
+sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info", "🌞 PVGIS Solar"]
 selected_section = st.sidebar.selectbox("🔍 Select section", sections)
 
 api_key = st.sidebar.text_input("🔐 ENTSO-E token", type="password")
-
 today = datetime.now()
 default_start = today - timedelta(days=7)
 start_date, end_date = st.sidebar.date_input("📅 Date range", value=(default_start, today), max_value=today)
 
-# Country selection
 country_codes = {
     "Portugal": "PT",
     "Spain": "ES",
@@ -29,7 +28,7 @@ country_codes = {
     "Belgium": "BE",
     "Netherlands": "NL"
 }
-selected_countries = st.sidebar.multiselect("🌍 Countries", list(country_codes.keys()), default=["Portugal", "Spain", "France", "Germany"])
+selected_countries = st.sidebar.multiselect("🌍 Countries", list(country_codes.keys()), default=["Germany", "Portugal", "Spain"])
 
 start = pd.Timestamp(start_date, tz="Europe/Brussels")
 end = pd.Timestamp(end_date + timedelta(days=1), tz="Europe/Brussels")
@@ -89,15 +88,17 @@ def fetch_price(client, name, code):
         st.warning(f"⚠️ Price – {name}: {e}")
         return pd.DataFrame()
 
-# Dashboard básico
 if selected_section == "📊 Dashboard":
     st.markdown(
         '''
         Welcome to the **Helianthus Energy Dashboard**.  
-        Explore ENTSO-E data for:
-        - Generation by source 🔆  
-        - Electricity load 🔋  
-        - Day-ahead market prices 💶  
+        Explore real-time data and solar potential across Europe.
+
+        - 🔆 Generation mix  
+        - 🔋 Electricity load  
+        - 💶 Day-ahead prices  
+        - 🌞 Monthly irradiation potential  
+        - ℹ️ EEG (FIT) incentives for rooftop solar  
 
         > Created by **Kenia Silverio**  
         👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
@@ -165,14 +166,19 @@ elif selected_section == "ℹ️ EEG Info":
             - Updated every 6 months by BNetzA.
             - Future adjustments may apply (e.g., +1.5 ct/kWh in the "Solarpaket I").
 
-            ---
-
-            🔗 **Official sources**:
-            - [BNetzA – EEG Förderhöhe](https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html)
-            - [EEG Tariff Overview (PDF)](https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/ErneuerbareEnergien/Photovoltaik/ZubauzahlenPV_EEG/EEG-VergSaetze.pdf)
+            🔗 [BNetzA – EEG Förderhöhe](https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html)
+            🔗 [EEG Tariff Overview (PDF)](https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/ErneuerbareEnergien/Photovoltaik/ZubauzahlenPV_EEG/EEG-VergSaetze.pdf)
             """,
             unsafe_allow_html=True
         )
+
+elif selected_section == "🌞 PVGIS Solar":
+    st.subheader("🌞 Monthly Solar Irradiation – Germany")
+    st.markdown("This map shows average monthly solar irradiation (kWh/m²) for several German cities.")
+    with open("solar_irradiation_map_germany.html", "r", encoding="utf-8") as f:
+        html_content = f.read()
+        components.html(html_content, height=600, scrolling=True)
+    st.markdown("Data source: [PVGIS – European Commission](https://re.jrc.ec.europa.eu/pvg_tools/en/)")
 
 else:
     st.info("Enter your ENTSO-E token and select a section to begin.")
