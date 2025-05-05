@@ -180,7 +180,7 @@ elif selected_section == "☀️ PVGIS Overview":
 
     with col1:
         st.markdown("### 🗺️ Map of Monthly Solar Irradiation")
-        components.iframe("pvgis_overview_map.html", height=600)
+        components.html("pvgis_overview_map.html", height=600)
 
     with col2:
         st.markdown("### 📋 Comparison Table")
