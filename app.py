@@ -107,7 +107,7 @@ if selected_section == "📊 Dashboard":
         '''
     )
 
-elif choice == "🌞 PVGIS Monthly":
+elif selected_section == "🌞 PVGIS Monthly":
     st.subheader("☀️ Monthly Solar Irradiation – Germany")
 
     city_coords = {
