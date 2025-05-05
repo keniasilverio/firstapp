@@ -13,7 +13,7 @@ st.set_page_config(layout="wide")
 st.title("🌻 Helianthus – ENTSO-E + Solar Insights")
 
 # Sidebar menu
-sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info", "🌞 PVGIS Solar"]
+sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info",  "🌞 PVGIS Monthly"]
 selected_section = st.sidebar.selectbox("🔍 Select section", sections)
 
 api_key = st.sidebar.text_input("🔐 ENTSO-E token", type="password")
