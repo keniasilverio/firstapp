@@ -107,29 +107,57 @@ if selected_section == "📊 Dashboard":
         '''
     )
 
-elif selected_section == "🌞 PVGIS Solar":
-    st.subheader("🌞 Monthly Solar Irradiation – Germany")
-    st.markdown("This map shows average monthly solar irradiation (kWh/m²) for several German cities.")
+elif choice == "🌞 PVGIS Monthly":
+    st.subheader("☀️ Monthly Solar Irradiation – Germany")
 
-    file_path = "solar_irradiation_map_germany.html"
-    file_url = "https://raw.githubusercontent.com/openai-sandbox-kenia/data/main/solar_irradiation_map_germany.html"
+    city_coords = {
+        "Berlin": (52.52, 13.405),
+        "Hamburg": (53.5511, 9.9937),
+        "Munich": (48.1351, 11.582),
+        "Frankfurt": (50.1109, 8.6821),
+        "Cologne": (50.9375, 6.9603)
+    }
+    months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
 
-    if not os.path.exists(file_path):
-        st.info("Downloading solar irradiation map...")
-        try:
-            response = requests.get(file_url)
-            if response.status_code == 200:
-                with open(file_path, "wb") as f:
-                    f.write(response.content)
-                st.success("Map downloaded successfully!")
-            else:
-                st.error("Failed to download map file.")
-        except Exception as e:
-            st.error(f"Download error: {e}")
+    selected_city = st.selectbox("📍 Select a German city", list(city_coords.keys()))
+    lat, lon = city_coords[selected_city]
 
-    if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
-            html_content = f.read()
-            components.html(html_content, height=600, scrolling=True)
+    def get_monthly_irradiation(lat, lon):
+        url = (
+            f"https://re.jrc.ec.europa.eu/api/v5_2/PVcalc?"
+            f"lat={lat}&lon={lon}&peakpower=1&loss=14&angle=35&aspect=0"
+            f"&mountingplace=building&pvtechchoice=crystSi&radiation_db=PVGIS-SARAH2"
+            f"&optimalangles=0&usehorizon=1&monthdata=1&outputformat=json"
+        )
+        r = requests.get(url)
+        data = r.json()
+        monthly_data = data["outputs"]["monthly"]["fixed"]
+        irradiation = [month["H(i)_m"] for month in monthly_data]
+        return irradiation
 
-    st.markdown("Data source: [PVGIS – European Commission](https://re.jrc.ec.europa.eu/pvg_tools/en/)")
+    irradiation = get_monthly_irradiation(lat, lon)
+
+    df_irr = pd.DataFrame({
+        "Month": months,
+        "Irradiation (kWh/m²)": irradiation
+    })
+
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        fig, ax = plt.subplots(figsize=(8, 4))
+        bars = ax.bar(df_irr["Month"], df_irr["Irradiation (kWh/m²)"], color="gold")
+        ax.set_title(f"☀️ Monthly Solar Irradiation – {selected_city}")
+        ax.set_ylabel("kWh/m²")
+        ax.tick_params(axis="x", rotation=45)
+        ax.grid(axis='y', linestyle='--', alpha=0.5)
+        for bar in bars:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2, height + 2, f"{height:.0f}", ha='center')
+        st.pyplot(fig)
+
+    with col2:
+        st.markdown(f"### 📋 Irradiation Table – {selected_city}")
+        st.dataframe(df_irr.style.format({"Irradiation (kWh/m²)": "{:.1f}"}), use_container_width=True)
