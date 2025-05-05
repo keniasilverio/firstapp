@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_3faf1fb5846d12a374980573ef96462a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_3faf1fb5846d12a374980573ef96462a" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_3faf1fb5846d12a374980573ef96462a = L.map(
+                "map_3faf1fb5846d12a374980573ef96462a",
+                {
+                    center: [51.1657, 10.4515],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 6,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a9729225947c01028e07b80fded1a90a = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_3faf1fb5846d12a374980573ef96462a);
+        
+    
+            var circle_marker_e889a7e5c7b342f9db8a264890f03113 = L.circleMarker(
+                [52.52, 13.405],
+                {"bubblingMouseEvents": true, "color": "#fd863aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd863aff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_3faf1fb5846d12a374980573ef96462a);
+        
+    
+        var popup_00f77e1a3a973bc089088d6eef0890ac = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e7f95d7249e531d70abaa33ea627d8b5 = $(`<div id="html_e7f95d7249e531d70abaa33ea627d8b5" style="width: 100.0%; height: 100.0%;">Berlin: 118.4 kWh/m²</div>`)[0];
+            popup_00f77e1a3a973bc089088d6eef0890ac.setContent(html_e7f95d7249e531d70abaa33ea627d8b5);
+        
+
+        circle_marker_e889a7e5c7b342f9db8a264890f03113.bindPopup(popup_00f77e1a3a973bc089088d6eef0890ac)
+        ;
+
+        
+    
+    
+            var circle_marker_bc7fa4733c7a0aa45dc61ab851854d9a = L.circleMarker(
+                [53.5511, 9.9937],
+                {"bubblingMouseEvents": true, "color": "#ffffccff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffffccff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_3faf1fb5846d12a374980573ef96462a);
+        
+    
+        var popup_e4424fc642bb91e420220c256345914e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7fe8e2b1d184c2b5dccca5523f5d17b4 = $(`<div id="html_7fe8e2b1d184c2b5dccca5523f5d17b4" style="width: 100.0%; height: 100.0%;">Hamburg: 109.6 kWh/m²</div>`)[0];
+            popup_e4424fc642bb91e420220c256345914e.setContent(html_7fe8e2b1d184c2b5dccca5523f5d17b4);
+        
+
+        circle_marker_bc7fa4733c7a0aa45dc61ab851854d9a.bindPopup(popup_e4424fc642bb91e420220c256345914e)
+        ;
+
+        
+    
+    
+            var circle_marker_480623905b6089f1f13916e8b8772872 = L.circleMarker(
+                [48.1351, 11.582],
+                {"bubblingMouseEvents": true, "color": "#800026ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#800026ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_3faf1fb5846d12a374980573ef96462a);
+        
+    
+        var popup_9f1c1e3ca8346ce13c7f4af5f22c714f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_49390fa38d40390b3211a4cde3253494 = $(`<div id="html_49390fa38d40390b3211a4cde3253494" style="width: 100.0%; height: 100.0%;">Munich: 126.7 kWh/m²</div>`)[0];
+            popup_9f1c1e3ca8346ce13c7f4af5f22c714f.setContent(html_49390fa38d40390b3211a4cde3253494);
+        
+
+        circle_marker_480623905b6089f1f13916e8b8772872.bindPopup(popup_9f1c1e3ca8346ce13c7f4af5f22c714f)
+        ;
+
+        
+    
+    
+            var circle_marker_4df6082068c59b863e2f7a4ea12b2c72 = L.circleMarker(
+                [50.1109, 8.6821],
+                {"bubblingMouseEvents": true, "color": "#e7221eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e7221eff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_3faf1fb5846d12a374980573ef96462a);
+        
+    
+        var popup_da0aa18dc31b82d99a2dc2a2676790fb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_bf283b393034ae642417c2b73af17f81 = $(`<div id="html_bf283b393034ae642417c2b73af17f81" style="width: 100.0%; height: 100.0%;">Frankfurt: 122.1 kWh/m²</div>`)[0];
+            popup_da0aa18dc31b82d99a2dc2a2676790fb.setContent(html_bf283b393034ae642417c2b73af17f81);
+        
+
+        circle_marker_4df6082068c59b863e2f7a4ea12b2c72.bindPopup(popup_da0aa18dc31b82d99a2dc2a2676790fb)
+        ;
+
+        
+    
+    
+            var circle_marker_67cdac512b42619c395bd7b9eb2ea942 = L.circleMarker(
+                [50.9375, 6.9603],
+                {"bubblingMouseEvents": true, "color": "#feb44eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feb44eff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_3faf1fb5846d12a374980573ef96462a);
+        
+    
+        var popup_f3c0f9bdec468f9e062a2fa39c64eee9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ab651bd4e82bbb86390adf3c840679c3 = $(`<div id="html_ab651bd4e82bbb86390adf3c840679c3" style="width: 100.0%; height: 100.0%;">Cologne: 115.9 kWh/m²</div>`)[0];
+            popup_f3c0f9bdec468f9e062a2fa39c64eee9.setContent(html_ab651bd4e82bbb86390adf3c840679c3);
+        
+
+        circle_marker_67cdac512b42619c395bd7b9eb2ea942.bindPopup(popup_f3c0f9bdec468f9e062a2fa39c64eee9)
+        ;
+
+        
+    
+    
+    var color_map_aaecfebcec50c2890e226c646678b333 = {};
+
+    
+    color_map_aaecfebcec50c2890e226c646678b333.color = d3.scale.threshold()
+              .domain([109.6, 109.63426853707415, 109.66853707414829, 109.70280561122244, 109.73707414829659, 109.77134268537074, 109.80561122244488, 109.83987975951904, 109.87414829659318, 109.90841683366733, 109.94268537074147, 109.97695390781563, 110.01122244488977, 110.04549098196392, 110.07975951903808, 110.11402805611222, 110.14829659318637, 110.18256513026051, 110.21683366733467, 110.25110220440881, 110.28537074148296, 110.3196392785571, 110.35390781563126, 110.3881763527054, 110.42244488977956, 110.4567134268537, 110.49098196392785, 110.525250501002, 110.55951903807615, 110.5937875751503, 110.62805611222444, 110.6623246492986, 110.69659318637274, 110.73086172344689, 110.76513026052103, 110.79939879759519, 110.83366733466933, 110.86793587174348, 110.90220440881762, 110.93647294589178, 110.97074148296592, 111.00501002004007, 111.03927855711423, 111.07354709418837, 111.10781563126253, 111.14208416833667, 111.17635270541082, 111.21062124248496, 111.24488977955912, 111.27915831663326, 111.31342685370741, 111.34769539078155, 111.38196392785571, 111.41623246492985, 111.450501002004, 111.48476953907816, 111.5190380761523, 111.55330661322645, 111.5875751503006, 111.62184368737475, 111.65611222444889, 111.69038076152304, 111.72464929859719, 111.75891783567134, 111.79318637274548, 111.82745490981964, 111.86172344689378, 111.89599198396793, 111.93026052104209, 111.96452905811623, 111.99879759519038, 112.03306613226452, 112.06733466933868, 112.10160320641282, 112.13587174348697, 112.17014028056111, 112.20440881763527, 112.23867735470941, 112.27294589178356, 112.3072144288577, 112.34148296593186, 112.375751503006, 112.41002004008016, 112.44428857715431, 112.47855711422845, 112.5128256513026, 112.54709418837675, 112.5813627254509, 112.61563126252504, 112.6498997995992, 112.68416833667334, 112.71843687374749, 112.75270541082163, 112.78697394789579, 112.82124248496993, 112.85551102204408, 112.88977955911824, 112.92404809619238, 112.95831663326653, 112.99258517034067, 113.02685370741483, 113.06112224448897, 113.09539078156313, 113.12965931863727, 113.16392785571142, 113.19819639278556, 113.23246492985972, 113.26673346693386, 113.30100200400801, 113.33527054108217, 113.36953907815631, 113.40380761523046, 113.4380761523046, 113.47234468937876, 113.5066132264529, 113.54088176352705, 113.5751503006012, 113.60941883767535, 113.64368737474949, 113.67795591182364, 113.71222444889779, 113.74649298597194, 113.7807615230461, 113.81503006012024, 113.84929859719439, 113.88356713426853, 113.91783567134269, 113.95210420841683, 113.98637274549098, 114.02064128256512, 114.05490981963928, 114.08917835671342, 114.12344689378757, 114.15771543086171, 114.19198396793587, 114.22625250501002, 114.26052104208416, 114.29478957915832, 114.32905811623246, 114.36332665330661, 114.39759519038076, 114.43186372745491, 114.46613226452905, 114.5004008016032, 114.53466933867735, 114.5689378757515, 114.60320641282564, 114.6374749498998, 114.67174348697394, 114.70601202404809, 114.74028056112225, 114.77454909819639, 114.80881763527054, 114.84308617234468, 114.87735470941884, 114.91162324649298, 114.94589178356713, 114.98016032064128, 115.01442885771543, 115.04869739478957, 115.08296593186373, 115.11723446893787, 115.15150300601202, 115.18577154308618, 115.22004008016032, 115.25430861723447, 115.28857715430861, 115.32284569138277, 115.35711422845691, 115.39138276553106, 115.4256513026052, 115.45991983967936, 115.4941883767535, 115.52845691382765, 115.5627254509018, 115.59699398797595, 115.63126252505009, 115.66553106212424, 115.6997995991984, 115.73406813627254, 115.7683366733467, 115.80260521042084, 115.83687374749499, 115.87114228456913, 115.90541082164329, 115.93967935871743, 115.97394789579158, 116.00821643286572, 116.04248496993988, 116.07675350701402, 116.11102204408817, 116.14529058116233, 116.17955911823647, 116.21382765531062, 116.24809619238476, 116.28236472945892, 116.31663326653306, 116.35090180360721, 116.38517034068136, 116.41943887775551, 116.45370741482965, 116.4879759519038, 116.52224448897795, 116.5565130260521, 116.59078156312626, 116.6250501002004, 116.65931863727455, 116.69358717434869, 116.72785571142285, 116.76212424849699, 116.79639278557114, 116.83066132264528, 116.86492985971944, 116.89919839679358, 116.93346693386773, 116.96773547094188, 117.00200400801603, 117.03627254509018, 117.07054108216433, 117.10480961923848, 117.13907815631262, 117.17334669338678, 117.20761523046092, 117.24188376753507, 117.27615230460921, 117.31042084168337, 117.34468937875751, 117.37895791583166, 117.4132264529058, 117.44749498997996, 117.48176352705411, 117.51603206412825, 117.55030060120241, 117.58456913827655, 117.6188376753507, 117.65310621242485, 117.687374749499, 117.72164328657314, 117.7559118236473, 117.79018036072144, 117.82444889779559, 117.85871743486973, 117.89298597194389, 117.92725450901804, 117.96152304609218, 117.99579158316632, 118.03006012024048, 118.06432865731463, 118.09859719438877, 118.13286573146293, 118.16713426853707, 118.20140280561122, 118.23567134268536, 118.26993987975952, 118.30420841683366, 118.33847695390781, 118.37274549098197, 118.40701402805611, 118.44128256513025, 118.4755511022044, 118.50981963927856, 118.5440881763527, 118.57835671342686, 118.612625250501, 118.64689378757515, 118.68116232464929, 118.71543086172345, 118.74969939879759, 118.78396793587174, 118.8182364729459, 118.85250501002004, 118.88677354709418, 118.92104208416833, 118.95531062124249, 118.98957915831663, 119.02384769539078, 119.05811623246493, 119.09238476953908, 119.12665330661322, 119.16092184368738, 119.19519038076152, 119.22945891783567, 119.26372745490983, 119.29799599198397, 119.33226452905811, 119.36653306613226, 119.40080160320642, 119.43507014028056, 119.46933867735471, 119.50360721442885, 119.53787575150301, 119.57214428857715, 119.6064128256513, 119.64068136272545, 119.6749498997996, 119.70921843687375, 119.7434869739479, 119.77775551102204, 119.81202404809619, 119.84629258517035, 119.88056112224449, 119.91482965931864, 119.94909819639278, 119.98336673346694, 120.01763527054108, 120.05190380761523, 120.08617234468937, 120.12044088176353, 120.15470941883768, 120.18897795591182, 120.22324649298596, 120.25751503006012, 120.29178356713427, 120.32605210420842, 120.36032064128257, 120.39458917835671, 120.42885771543087, 120.463126252505, 120.49739478957916, 120.5316633266533, 120.56593186372746, 120.60020040080161, 120.63446893787575, 120.66873747494989, 120.70300601202405, 120.7372745490982, 120.77154308617234, 120.8058116232465, 120.84008016032064, 120.8743486973948, 120.90861723446893, 120.94288577154309, 120.97715430861723, 121.01142284569138, 121.04569138276554, 121.07995991983968, 121.11422845691382, 121.14849699398798, 121.18276553106213, 121.21703406813627, 121.25130260521043, 121.28557114228457, 121.31983967935872, 121.35410821643286, 121.38837675350702, 121.42264529058116, 121.45691382765531, 121.49118236472945, 121.52545090180361, 121.55971943887775, 121.5939879759519, 121.62825651302606, 121.6625250501002, 121.69679358717435, 121.7310621242485, 121.76533066132265, 121.79959919839679, 121.83386773547095, 121.86813627254509, 121.90240480961924, 121.93667334669338, 121.97094188376754, 122.00521042084168, 122.03947895791583, 122.07374749498999, 122.10801603206413, 122.14228456913828, 122.17655310621242, 122.21082164328658, 122.24509018036072, 122.27935871743487, 122.31362725450902, 122.34789579158317, 122.38216432865731, 122.41643286573147, 122.4507014028056, 122.48496993987976, 122.51923847695392, 122.55350701402806, 122.5877755511022, 122.62204408817635, 122.65631262525051, 122.69058116232465, 122.7248496993988, 122.75911823647294, 122.7933867735471, 122.82765531062124, 122.8619238476954, 122.89619238476953, 122.93046092184369, 122.96472945891784, 122.99899799599199, 123.03326653306613, 123.06753507014028, 123.10180360721444, 123.13607214428858, 123.17034068136273, 123.20460921843687, 123.23887775551103, 123.27314629258517, 123.30741482965932, 123.34168336673346, 123.37595190380762, 123.41022044088177, 123.44448897795591, 123.47875751503005, 123.51302605210421, 123.54729458917836, 123.5815631262525, 123.61583166332666, 123.6501002004008, 123.68436873747495, 123.7186372745491, 123.75290581162325, 123.78717434869739, 123.82144288577155, 123.8557114228457, 123.88997995991984, 123.92424849699398, 123.95851703406814, 123.99278557114229, 124.02705410821643, 124.06132264529059, 124.09559118236473, 124.12985971943888, 124.16412825651302, 124.19839679358718, 124.23266533066132, 124.26693386773547, 124.30120240480962, 124.33547094188377, 124.36973947895791, 124.40400801603207, 124.43827655310622, 124.47254509018036, 124.50681362725452, 124.54108216432866, 124.57535070140281, 124.60961923847695, 124.64388777555111, 124.67815631262525, 124.7124248496994, 124.74669338677354, 124.7809619238477, 124.81523046092184, 124.849498997996, 124.88376753507015, 124.91803607214429, 124.95230460921844, 124.98657314629259, 125.02084168336674, 125.05511022044088, 125.08937875751504, 125.12364729458918, 125.15791583166333, 125.19218436873747, 125.22645290581163, 125.26072144288577, 125.29498997995992, 125.32925851703408, 125.36352705410822, 125.39779559118237, 125.43206412825651, 125.46633266533067, 125.50060120240481, 125.53486973947896, 125.5691382765531, 125.60340681362726, 125.6376753507014, 125.67194388777556, 125.7062124248497, 125.74048096192385, 125.774749498998, 125.80901803607215, 125.84328657314629, 125.87755511022044, 125.9118236472946, 125.94609218436874, 125.98036072144289, 126.01462925851703, 126.04889779559119, 126.08316633266533, 126.11743486973948, 126.15170340681362, 126.18597194388778, 126.22024048096193, 126.25450901803607, 126.28877755511022, 126.32304609218437, 126.35731462925852, 126.39158316633267, 126.42585170340682, 126.46012024048096, 126.49438877755512, 126.52865731462927, 126.56292585170341, 126.59719438877755, 126.63146292585171, 126.66573146292586, 126.7])
+              .range(['#ffffccff', '#ffffccff', '#ffffcbff', '#ffffcaff', '#fffec9ff', '#fffec9ff', '#fffec8ff', '#fffdc7ff', '#fffdc7ff', '#fffdc6ff', '#fffdc5ff', '#fffcc5ff', '#fffcc4ff', '#fffcc3ff', '#fffbc2ff', '#fffbc2ff', '#fffbc1ff', '#fffbc0ff', '#fffac0ff', '#fffabfff', '#fffabeff', '#fff9bdff', '#fff9bdff', '#fff9bcff', '#fff9bbff', '#fff8bbff', '#fff8baff', '#fff8b9ff', '#fff7b8ff', '#fff7b8ff', '#fff7b7ff', '#fff7b6ff', '#fff6b6ff', '#fff6b5ff', '#fff6b4ff', '#fff5b4ff', '#fff5b3ff', '#fff5b2ff', '#fff4b1ff', '#fff4b1ff', '#fff4b0ff', '#fff4afff', '#fff3afff', '#fff3aeff', '#fff3adff', '#fff2acff', '#fff2acff', '#fff2abff', '#fff2aaff', '#fff1aaff', '#fff1a9ff', '#fff1a8ff', '#fff0a7ff', '#fff0a7ff', '#fff0a6ff', '#fff0a5ff', '#ffefa5ff', '#ffefa4ff', '#ffefa3ff', '#ffeea3ff', '#ffeea2ff', '#ffeea1ff', '#ffeea0ff', '#ffeda0ff', '#ffed9fff', '#ffed9eff', '#ffec9eff', '#ffec9dff', '#ffec9cff', '#ffeb9cff', '#ffeb9bff', '#ffeb9aff', '#ffea9aff', '#ffea99ff', '#ffea98ff', '#ffe998ff', '#ffe997ff', '#ffe996ff', '#ffe896ff', '#ffe895ff', '#ffe894ff', '#ffe794ff', '#ffe793ff', '#ffe792ff', '#ffe692ff', '#ffe691ff', '#ffe690ff', '#ffe68fff', '#ffe58fff', '#ffe58eff', '#ffe58dff', '#ffe48dff', '#ffe48cff', '#ffe48bff', '#ffe38bff', '#ffe38aff', '#ffe389ff', '#ffe289ff', '#ffe288ff', '#ffe287ff', '#ffe187ff', '#ffe186ff', '#ffe185ff', '#ffe085ff', '#ffe084ff', '#ffe083ff', '#ffdf83ff', '#ffdf82ff', '#ffdf81ff', '#ffde81ff', '#ffde80ff', '#ffde7fff', '#ffdd7fff', '#ffdd7eff', '#ffdd7dff', '#ffdc7dff', '#ffdc7cff', '#ffdc7bff', '#ffdc7bff', '#ffdb7aff', '#ffdb79ff', '#ffdb78ff', '#ffda78ff', '#ffda77ff', '#ffda76ff', '#fed976ff', '#fed975ff', '#fed874ff', '#fed774ff', '#fed773ff', '#fed672ff', '#fed572ff', '#fed571ff', '#fed470ff', '#fed470ff', '#fed36fff', '#fed26eff', '#fed26eff', '#fed16dff', '#fed06cff', '#fed06cff', '#fecf6bff', '#fecf6aff', '#fece6aff', '#fecd69ff', '#fecd68ff', '#fecc68ff', '#fecb67ff', '#fecb66ff', '#feca66ff', '#feca65ff', '#fec964ff', '#fec864ff', '#fec863ff', '#fec762ff', '#fec662ff', '#fec661ff', '#fec560ff', '#fec45fff', '#fec45fff', '#fec35eff', '#fec35dff', '#fec25dff', '#fec15cff', '#fec15bff', '#fec05bff', '#febf5aff', '#febf59ff', '#febe59ff', '#febe58ff', '#febd57ff', '#febc57ff', '#febc56ff', '#febb55ff', '#feba55ff', '#feba54ff', '#feb953ff', '#feb953ff', '#feb852ff', '#feb751ff', '#feb751ff', '#feb650ff', '#feb54fff', '#feb54fff', '#feb44eff', '#feb44dff', '#feb34dff', '#feb24cff', '#feb24cff', '#feb14bff', '#feb04bff', '#feb04bff', '#feaf4bff', '#feaf4aff', '#feae4aff', '#feae4aff', '#fead4aff', '#feac49ff', '#feac49ff', '#feab49ff', '#feab48ff', '#feaa48ff', '#fea948ff', '#fea948ff', '#fea847ff', '#fea847ff', '#fea747ff', '#fea647ff', '#fea646ff', '#fea546ff', '#fea546ff', '#fea446ff', '#fea345ff', '#fea345ff', '#fea245ff', '#fea245ff', '#fea144ff', '#fea044ff', '#fea044ff', '#fe9f44ff', '#fe9f43ff', '#fe9e43ff', '#fe9d43ff', '#fe9d43ff', '#fe9c42ff', '#fe9c42ff', '#fe9b42ff', '#fe9a42ff', '#fe9a41ff', '#fe9941ff', '#fe9941ff', '#fe9840ff', '#fe9740ff', '#fe9740ff', '#fe9640ff', '#fe963fff', '#fe953fff', '#fe943fff', '#fe943fff', '#fe933eff', '#fe933eff', '#fe923eff', '#fe923eff', '#fe913dff', '#fe903dff', '#fe903dff', '#fe8f3dff', '#fe8f3cff', '#fe8e3cff', '#fe8d3cff', '#fd8d3cff', '#fd8c3bff', '#fd8b3bff', '#fd8a3bff', '#fd883aff', '#fd873aff', '#fd863aff', '#fd853aff', '#fd8439ff', '#fd8339ff', '#fd8239ff', '#fd8138ff', '#fd8038ff', '#fd7f38ff', '#fd7e38ff', '#fd7d37ff', '#fd7c37ff', '#fd7b37ff', '#fd7a36ff', '#fd7936ff', '#fd7836ff', '#fd7736ff', '#fd7635ff', '#fd7535ff', '#fd7435ff', '#fd7334ff', '#fd7234ff', '#fd7134ff', '#fd7033ff', '#fd6f33ff', '#fd6e33ff', '#fd6d33ff', '#fd6c32ff', '#fd6b32ff', '#fd6a32ff', '#fd6931ff', '#fd6831ff', '#fd6731ff', '#fd6631ff', '#fd6530ff', '#fd6430ff', '#fd6330ff', '#fd622fff', '#fd612fff', '#fd602fff', '#fd5f2fff', '#fd5e2eff', '#fd5d2eff', '#fd5c2eff', '#fd5b2dff', '#fd5a2dff', '#fd592dff', '#fd582dff', '#fd572cff', '#fd562cff', '#fd552cff', '#fd542bff', '#fd532bff', '#fd522bff', '#fd512aff', '#fd502aff', '#fd4f2aff', '#fc4e2aff', '#fc4d29ff', '#fc4c29ff', '#fb4b29ff', '#fb4a29ff', '#fa4a29ff', '#fa4928ff', '#fa4828ff', '#f94728ff', '#f94628ff', '#f84527ff', '#f84427ff', '#f84427ff', '#f74327ff', '#f74226ff', '#f64126ff', '#f64026ff', '#f63f26ff', '#f53f26ff', '#f53e25ff', '#f43d25ff', '#f43c25ff', '#f43b25ff', '#f33a24ff', '#f33a24ff', '#f23924ff', '#f23824ff', '#f23724ff', '#f13623ff', '#f13523ff', '#f03523ff', '#f03423ff', '#f03322ff', '#ef3222ff', '#ef3122ff', '#ee3022ff', '#ee3022ff', '#ee2f21ff', '#ed2e21ff', '#ed2d21ff', '#ec2c21ff', '#ec2b20ff', '#ec2b20ff', '#eb2a20ff', '#eb2920ff', '#ea281fff', '#ea271fff', '#ea261fff', '#e9261fff', '#e9251fff', '#e8241eff', '#e8231eff', '#e8221eff', '#e7211eff', '#e7211dff', '#e6201dff', '#e61f1dff', '#e61e1dff', '#e51d1dff', '#e51c1cff', '#e41b1cff', '#e41b1cff', '#e31a1cff', '#e3191cff', '#e2191cff', '#e2181cff', '#e1181cff', '#e0181cff', '#e0171dff', '#df171dff', '#df161dff', '#de161dff', '#dd161dff', '#dd151dff', '#dc151eff', '#dc141eff', '#db141eff', '#da131eff', '#da131eff', '#d9131eff', '#d9121eff', '#d8121fff', '#d7111fff', '#d7111fff', '#d6111fff', '#d5101fff', '#d5101fff', '#d40f20ff', '#d40f20ff', '#d30e20ff', '#d20e20ff', '#d20e20ff', '#d10d20ff', '#d10d21ff', '#d00c21ff', '#cf0c21ff', '#cf0b21ff', '#ce0b21ff', '#ce0b21ff', '#cd0a22ff', '#cc0a22ff', '#cc0922ff', '#cb0922ff', '#ca0922ff', '#ca0822ff', '#c90822ff', '#c90723ff', '#c80723ff', '#c70623ff', '#c70623ff', '#c60623ff', '#c60523ff', '#c50524ff', '#c40424ff', '#c40424ff', '#c30424ff', '#c30324ff', '#c20324ff', '#c10225ff', '#c10225ff', '#c00125ff', '#bf0125ff', '#bf0125ff', '#be0025ff', '#be0026ff', '#bd0026ff', '#bc0026ff', '#bb0026ff', '#ba0026ff', '#b90026ff', '#b80026ff', '#b70026ff', '#b60026ff', '#b50026ff', '#b40026ff', '#b30026ff', '#b20026ff', '#b10026ff', '#b00026ff', '#af0026ff', '#ae0026ff', '#ad0026ff', '#ac0026ff', '#ab0026ff', '#aa0026ff', '#a90026ff', '#a80026ff', '#a70026ff', '#a60026ff', '#a50026ff', '#a40026ff', '#a30026ff', '#a20026ff', '#a10026ff', '#a00026ff', '#9f0026ff', '#9e0026ff', '#9d0026ff', '#9c0026ff', '#9b0026ff', '#9b0026ff', '#9a0026ff', '#990026ff', '#980026ff', '#970026ff', '#960026ff', '#950026ff', '#940026ff', '#930026ff', '#920026ff', '#910026ff', '#900026ff', '#8f0026ff', '#8e0026ff', '#8d0026ff', '#8c0026ff', '#8b0026ff', '#8a0026ff', '#890026ff', '#880026ff', '#870026ff', '#860026ff', '#850026ff', '#840026ff', '#830026ff', '#820026ff', '#810026ff', '#800026ff']);
+    
+
+    color_map_aaecfebcec50c2890e226c646678b333.x = d3.scale.linear()
+              .domain([109.6, 126.7])
+              .range([0, 450 - 50]);
+
+    color_map_aaecfebcec50c2890e226c646678b333.legend = L.control({position: 'topright'});
+    color_map_aaecfebcec50c2890e226c646678b333.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_aaecfebcec50c2890e226c646678b333.legend.addTo(map_3faf1fb5846d12a374980573ef96462a);
+
+    color_map_aaecfebcec50c2890e226c646678b333.xAxis = d3.svg.axis()
+        .scale(color_map_aaecfebcec50c2890e226c646678b333.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([109.6, 111.7375, 113.875, 116.0125, 118.15, 120.2875, 122.425, 124.5625, 126.7]);
+
+    color_map_aaecfebcec50c2890e226c646678b333.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_aaecfebcec50c2890e226c646678b333.g = color_map_aaecfebcec50c2890e226c646678b333.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_aaecfebcec50c2890e226c646678b333.g.selectAll("rect")
+        .data(color_map_aaecfebcec50c2890e226c646678b333.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_aaecfebcec50c2890e226c646678b333.x(color_map_aaecfebcec50c2890e226c646678b333.color.domain()[i - 1]) : color_map_aaecfebcec50c2890e226c646678b333.x.range()[0],
+            x1: i < color_map_aaecfebcec50c2890e226c646678b333.color.domain().length ? color_map_aaecfebcec50c2890e226c646678b333.x(color_map_aaecfebcec50c2890e226c646678b333.color.domain()[i]) : color_map_aaecfebcec50c2890e226c646678b333.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_aaecfebcec50c2890e226c646678b333.g.call(color_map_aaecfebcec50c2890e226c646678b333.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("Monthly Solar Irradiation (kWh/m\u00b2)");
+</script>
+</html>
