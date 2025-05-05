@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_253665a99aacbf5a33727464b8fa6703 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_253665a99aacbf5a33727464b8fa6703" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_253665a99aacbf5a33727464b8fa6703 = L.map(
+                "map_253665a99aacbf5a33727464b8fa6703",
+                {
+                    center: [51.1657, 10.4515],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 6,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_764dd2ea517abd3afbdba26fba4575f9 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_253665a99aacbf5a33727464b8fa6703);
+        
+    
+            var marker_cluster_89987ef8b22ca67f054942800b4d483c = L.markerClusterGroup(
+                {}
+            );
+            map_253665a99aacbf5a33727464b8fa6703.addLayer(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var marker_2cb2d9ffad813a45bbaa9cf9a0051972 = L.marker(
+                [52.52, 13.405],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_fc05cd672a16b9523a9c8e02b4f6d142 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_2cb2d9ffad813a45bbaa9cf9a0051972.setIcon(icon_fc05cd672a16b9523a9c8e02b4f6d142);
+        
+    
+        var popup_f8d0b59724aa29b95f5d90c71b2a498b = L.popup({"maxWidth": 300});
+
+        
+            var html_322925f3f80dbfec137aadb8866caf96 = $(`<div id="html_322925f3f80dbfec137aadb8866caf96" style="width: 100.0%; height: 100.0%;"><b>Berlin 🇩🇪</b><br><br>1: 38.56 kWh/m²<br>2: 63.74 kWh/m²<br>3: 105.17 kWh/m²<br>4: 154.27 kWh/m²<br>5: 165.03 kWh/m²<br>6: 170.59 kWh/m²<br>7: 169.4 kWh/m²<br>8: 158.37 kWh/m²<br>9: 128.53 kWh/m²<br>10: 84.88 kWh/m²<br>11: 46.2 kWh/m²<br>12: 34.07 kWh/m²</div>`)[0];
+            popup_f8d0b59724aa29b95f5d90c71b2a498b.setContent(html_322925f3f80dbfec137aadb8866caf96);
+        
+
+        marker_2cb2d9ffad813a45bbaa9cf9a0051972.bindPopup(popup_f8d0b59724aa29b95f5d90c71b2a498b)
+        ;
+
+        
+    
+    
+            var marker_6052b92bbc94a729b9ef0c8a827070b7 = L.marker(
+                [48.1351, 11.582],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_7059286ffd7276c2b5c9102d3b226002 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_6052b92bbc94a729b9ef0c8a827070b7.setIcon(icon_7059286ffd7276c2b5c9102d3b226002);
+        
+    
+        var popup_779e6f86f4f63676161778da3987b091 = L.popup({"maxWidth": 300});
+
+        
+            var html_92fc1e2d812642a31a98149c68a8301c = $(`<div id="html_92fc1e2d812642a31a98149c68a8301c" style="width: 100.0%; height: 100.0%;"><b>Munich 🇩🇪</b><br><br>1: 57.25 kWh/m²<br>2: 77.48 kWh/m²<br>3: 119.23 kWh/m²<br>4: 152.13 kWh/m²<br>5: 152.52 kWh/m²<br>6: 159.91 kWh/m²<br>7: 171.97 kWh/m²<br>8: 160.88 kWh/m²<br>9: 130.74 kWh/m²<br>10: 101.21 kWh/m²<br>11: 65.05 kWh/m²<br>12: 57.04 kWh/m²</div>`)[0];
+            popup_779e6f86f4f63676161778da3987b091.setContent(html_92fc1e2d812642a31a98149c68a8301c);
+        
+
+        marker_6052b92bbc94a729b9ef0c8a827070b7.bindPopup(popup_779e6f86f4f63676161778da3987b091)
+        ;
+
+        
+    
+    
+            var marker_702786a5ecbb5c7a68b9390540949a53 = L.marker(
+                [53.5511, 9.9937],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_81bd443818cc2106acea4dc204ae788d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_702786a5ecbb5c7a68b9390540949a53.setIcon(icon_81bd443818cc2106acea4dc204ae788d);
+        
+    
+        var popup_9a44da21b6e74401e48012f0517936aa = L.popup({"maxWidth": 300});
+
+        
+            var html_da21f813b1d674e98fba35a453592752 = $(`<div id="html_da21f813b1d674e98fba35a453592752" style="width: 100.0%; height: 100.0%;"><b>Hamburg 🇩🇪</b><br><br>1: 31.95 kWh/m²<br>2: 53.9 kWh/m²<br>3: 97.74 kWh/m²<br>4: 147.41 kWh/m²<br>5: 159.8 kWh/m²<br>6: 159.12 kWh/m²<br>7: 162.74 kWh/m²<br>8: 142.12 kWh/m²<br>9: 116.7 kWh/m²<br>10: 78.23 kWh/m²<br>11: 39.58 kWh/m²<br>12: 26.87 kWh/m²</div>`)[0];
+            popup_9a44da21b6e74401e48012f0517936aa.setContent(html_da21f813b1d674e98fba35a453592752);
+        
+
+        marker_702786a5ecbb5c7a68b9390540949a53.bindPopup(popup_9a44da21b6e74401e48012f0517936aa)
+        ;
+
+        
+    
+    
+            var marker_518ab98b07d290da18fc00eff8366f83 = L.marker(
+                [50.9375, 6.9603],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_48ae717f38ee2988b1c700e08dd0979c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_518ab98b07d290da18fc00eff8366f83.setIcon(icon_48ae717f38ee2988b1c700e08dd0979c);
+        
+    
+        var popup_fde134e9234eb3f7c808e22afc7f8e57 = L.popup({"maxWidth": 300});
+
+        
+            var html_d4d614036433ba4e857955917557aeb1 = $(`<div id="html_d4d614036433ba4e857955917557aeb1" style="width: 100.0%; height: 100.0%;"><b>Cologne 🇩🇪</b><br><br>1: 45.4 kWh/m²<br>2: 64.61 kWh/m²<br>3: 109.67 kWh/m²<br>4: 146.79 kWh/m²<br>5: 157.98 kWh/m²<br>6: 159.84 kWh/m²<br>7: 162.97 kWh/m²<br>8: 147.85 kWh/m²<br>9: 123.3 kWh/m²<br>10: 86.61 kWh/m²<br>11: 51.95 kWh/m²<br>12: 38.23 kWh/m²</div>`)[0];
+            popup_fde134e9234eb3f7c808e22afc7f8e57.setContent(html_d4d614036433ba4e857955917557aeb1);
+        
+
+        marker_518ab98b07d290da18fc00eff8366f83.bindPopup(popup_fde134e9234eb3f7c808e22afc7f8e57)
+        ;
+
+        
+    
+    
+            var marker_b9ca711754dc0ba63ae93b66639bdf9f = L.marker(
+                [50.1109, 8.6821],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_82fa1a17b752e1f49952393b1ae6a83c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_b9ca711754dc0ba63ae93b66639bdf9f.setIcon(icon_82fa1a17b752e1f49952393b1ae6a83c);
+        
+    
+        var popup_25d95fae8c96a5a79097aa56f23a0ffc = L.popup({"maxWidth": 300});
+
+        
+            var html_32b03dbeecb35394817bddeba9323ee1 = $(`<div id="html_32b03dbeecb35394817bddeba9323ee1" style="width: 100.0%; height: 100.0%;"><b>Frankfurt 🇩🇪</b><br><br>1: 46.05 kWh/m²<br>2: 68.03 kWh/m²<br>3: 115.02 kWh/m²<br>4: 156.46 kWh/m²<br>5: 163.56 kWh/m²<br>6: 168.54 kWh/m²<br>7: 175.83 kWh/m²<br>8: 158.78 kWh/m²<br>9: 132.9 kWh/m²<br>10: 88.71 kWh/m²<br>11: 48.27 kWh/m²<br>12: 36.08 kWh/m²</div>`)[0];
+            popup_25d95fae8c96a5a79097aa56f23a0ffc.setContent(html_32b03dbeecb35394817bddeba9323ee1);
+        
+
+        marker_b9ca711754dc0ba63ae93b66639bdf9f.bindPopup(popup_25d95fae8c96a5a79097aa56f23a0ffc)
+        ;
+
+        
+    
+    
+            var marker_de0f9b1ed57ae0ecc0df0c01eaca6c84 = L.marker(
+                [51.3397, 12.3731],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_4ec7fecc8cd6e82936bc9786895d204d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_de0f9b1ed57ae0ecc0df0c01eaca6c84.setIcon(icon_4ec7fecc8cd6e82936bc9786895d204d);
+        
+    
+        var popup_f9d9e2925863b214a89ee12664aee475 = L.popup({"maxWidth": 300});
+
+        
+            var html_84f70b5e479188c3674a1a75824e9fc5 = $(`<div id="html_84f70b5e479188c3674a1a75824e9fc5" style="width: 100.0%; height: 100.0%;"><b>Leipzig 🇩🇪</b><br><br>1: 42.84 kWh/m²<br>2: 64.06 kWh/m²<br>3: 105.82 kWh/m²<br>4: 153.68 kWh/m²<br>5: 166.04 kWh/m²<br>6: 167.82 kWh/m²<br>7: 170.52 kWh/m²<br>8: 155.09 kWh/m²<br>9: 127.08 kWh/m²<br>10: 88.76 kWh/m²<br>11: 52.96 kWh/m²<br>12: 40.99 kWh/m²</div>`)[0];
+            popup_f9d9e2925863b214a89ee12664aee475.setContent(html_84f70b5e479188c3674a1a75824e9fc5);
+        
+
+        marker_de0f9b1ed57ae0ecc0df0c01eaca6c84.bindPopup(popup_f9d9e2925863b214a89ee12664aee475)
+        ;
+
+        
+    
+    
+            var marker_ceba8ec7c7cfdb3d799644b028ec1d80 = L.marker(
+                [48.7758, 9.1829],
+                {}
+            ).addTo(marker_cluster_89987ef8b22ca67f054942800b4d483c);
+        
+    
+            var icon_ba1bd4c065b12d0ae7a189ab23e426ba = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "sun", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_ceba8ec7c7cfdb3d799644b028ec1d80.setIcon(icon_ba1bd4c065b12d0ae7a189ab23e426ba);
+        
+    
+        var popup_7dd9ba69ca8f0c75ee943246c065f80a = L.popup({"maxWidth": 300});
+
+        
+            var html_0e10f454407ebd65eb206c4b391df8d5 = $(`<div id="html_0e10f454407ebd65eb206c4b391df8d5" style="width: 100.0%; height: 100.0%;"><b>Stuttgart 🇩🇪</b><br><br>1: 53.25 kWh/m²<br>2: 72.23 kWh/m²<br>3: 121.51 kWh/m²<br>4: 153.17 kWh/m²<br>5: 157.91 kWh/m²<br>6: 166.5 kWh/m²<br>7: 174.17 kWh/m²<br>8: 159.89 kWh/m²<br>9: 135.81 kWh/m²<br>10: 99.36 kWh/m²<br>11: 63.38 kWh/m²<br>12: 51.19 kWh/m²</div>`)[0];
+            popup_7dd9ba69ca8f0c75ee943246c065f80a.setContent(html_0e10f454407ebd65eb206c4b391df8d5);
+        
+
+        marker_ceba8ec7c7cfdb3d799644b028ec1d80.bindPopup(popup_7dd9ba69ca8f0c75ee943246c065f80a)
+        ;
+
+        
+    
+</script>
+</html>
