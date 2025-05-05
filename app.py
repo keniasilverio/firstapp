@@ -15,7 +15,7 @@ st.set_page_config(layout="wide")
 st.title("🌻 Helianthus – ENTSO-E + Solar Insights")
 
 # Sidebar menu
-sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info", "🌞 PVGIS Monthly", "☀️ PVGIS Overview"]
+sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info", "🌞 PVGIS Monthly", "☀️ PVGIS Overview", "🔐 Project Management"]
 selected_section = st.sidebar.selectbox("🔍 Select section", sections)
 
 api_key = st.sidebar.text_input("🔐 ENTSO-E token", type="password")
@@ -185,4 +185,37 @@ elif selected_section == "☀️ PVGIS Overview":
     with col2:
         st.markdown("### 📋 Comparison Table")
         st.dataframe(df.sort_values("Irradiation (kWh/m²)", ascending=False), use_container_width=True)
+
+elif selected_section == "🔐 Project Management":
+    import streamlit as st
+    import pandas as pd
+
+    st.subheader("🔐 Restricted Project Management Area")
+
+    password = st.text_input("Enter access password", type="password")
+    if password == "VODASUN":
+        st.success("Access granted. Welcome to the Project Management Area.")
+
+        uploaded_file = st.file_uploader("📂 Upload your Excel file with project data", type=["xlsx"])
+        if uploaded_file:
+            df_projects = pd.read_excel(uploaded_file)
+            st.write("📊 Preview of your project data:")
+            st.dataframe(df_projects, use_container_width=True)
+
+            # Exemplo de cálculo: Payback
+            if "CAPEX" in df_projects.columns and "Annual Revenue" in df_projects.columns:
+                df_projects["Payback (years)"] = df_projects["CAPEX"] / df_projects["Annual Revenue"]
+                st.markdown("### 💰 Payback Calculation")
+                st.dataframe(df_projects[["Project Name", "Payback (years)"]])
+
+            # Download option
+            st.download_button(
+                label="📥 Download updated file",
+                data=df_projects.to_csv(index=False).encode('utf-8'),
+                file_name="project_data_with_calculations.csv",
+                mime="text/csv"
+            )
+
+    else:
+        st.warning("This section is protected. Please enter the correct password to continue.")
 
