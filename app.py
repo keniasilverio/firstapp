@@ -172,6 +172,17 @@ elif selected_section == "ℹ️ EEG Info":
             unsafe_allow_html=True
         )
 
+
+    st.subheader("🌞 Monthly Solar Irradiation – Germany")
+    st.markdown("This map shows average monthly solar irradiation (kWh/m²) for several German cities.")
+    with open("solar_irradiation_map_germany.html", "r", encoding="utf-8") as f:
+        html_content = f.read()
+        components.html(html_content, height=600, scrolling=True)
+    st.markdown("Data source: [PVGIS – European Commission](https://re.jrc.ec.europa.eu/pvg_tools/en/)")
+
+else:
+    st.info("Enter your ENTSO-E token and select a section to begin.")
+
 elif selected_section == "🌞 PVGIS Solar":
     st.subheader("☀️ Monthly Solar Irradiation – Germany")
 
