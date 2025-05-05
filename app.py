@@ -202,20 +202,18 @@ elif selected_section == "🔐 Project Management":
             st.write("📊 Preview of your project data:")
             st.dataframe(df_projects, use_container_width=True)
 
-            # Exemplo de cálculo: Payback
             if "CAPEX" in df_projects.columns and "Annual Revenue" in df_projects.columns:
                 df_projects["Payback (years)"] = df_projects["CAPEX"] / df_projects["Annual Revenue"]
                 st.markdown("### 💰 Payback Calculation")
                 st.dataframe(df_projects[["Project Name", "Payback (years)"]])
 
-            # Download option
             st.download_button(
                 label="📥 Download updated file",
                 data=df_projects.to_csv(index=False).encode('utf-8'),
                 file_name="project_data_with_calculations.csv",
                 mime="text/csv"
             )
-
     else:
         st.warning("This section is protected. Please enter the correct password to continue.")
+
 
