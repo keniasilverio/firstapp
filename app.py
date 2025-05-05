@@ -109,6 +109,36 @@ if selected_section == "📊 Dashboard":
         '''
     )
 
+elif selected_section == "ℹ️ EEG Info":
+    st.subheader("ℹ️ Feed-in Tariff – EEG 2025 (Germany)")
+
+    if st.button("📄 Show FIT Table"):
+        st.markdown(
+            """
+            ### ⚡ Feed-in Tariff (EEG) – Germany (Feb to Jul 2025)
+
+            | System Size           | Injection Type         | Tariff (ct/kWh) |
+            |-----------------------|------------------------|-----------------|
+            | Up to 10 kWp          | Partial (self-consumed)| 7.94            |
+            |                       | Total (fully injected) | 12.60           |
+            | 10 to 40 kWp          | Partial                | 6.88            |
+            |                       | Total                  | 10.56           |
+            | 40 to 100 kWp         | Partial                | 5.62            |
+            |                       | Total                  | 10.56           |
+
+            **Notes:**
+            - "Partial" = self-consumption with excess fed into the grid.
+            - "Total" = full injection to the grid.
+            - Tariffs are guaranteed for 20 years.
+            - Updated every 6 months by BNetzA.
+            - Future adjustments may apply (e.g., +1.5 ct/kWh in the "Solarpaket I").
+
+            🔗 [BNetzA – EEG Förderhöhe](https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html)
+            🔗 [EEG Tariff Overview (PDF)](https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/ErneuerbareEnergien/Photovoltaik/ZubauzahlenPV_EEG/EEG-VergSaetze.pdf)
+            """,
+            unsafe_allow_html=True
+        )
+    
 elif selected_section == "🌞 PVGIS Monthly":
     st.subheader("☀️ Monthly Solar Irradiation – Germany")
 
@@ -196,24 +226,57 @@ elif selected_section == "🔐 Project Management":
     if password == "VODASUN":
         st.success("Access granted. Welcome to the Project Management Area.")
 
-        uploaded_file = st.file_uploader("📂 Upload your Excel file with project data", type=["xlsx"])
+        st.markdown("### 📂 Upload your Excel project file")
+        uploaded_file = st.file_uploader("Upload file", type=["xlsx"])
+
         if uploaded_file:
-            df_projects = pd.read_excel(uploaded_file)
-            st.write("📊 Preview of your project data:")
-            st.dataframe(df_projects, use_container_width=True)
+            df = pd.read_excel(uploaded_file)
 
-            if "CAPEX" in df_projects.columns and "Annual Revenue" in df_projects.columns:
-                df_projects["Payback (years)"] = df_projects["CAPEX"] / df_projects["Annual Revenue"]
-                st.markdown("### 💰 Payback Calculation")
-                st.dataframe(df_projects[["Project Name", "Payback (years)"]])
+            # Tarifas FIT
+            tarifas_ate_400 = [
+                {'faixa_kWp': 10, 'fit_tarifa': 12.99},
+                {'faixa_kWp': 30, 'fit_tarifa': 10.96},
+                {'faixa_kWp': 60, 'fit_tarifa': 12.47},
+                {'faixa_kWp': float('inf'), 'fit_tarifa': 10.63}
+            ]
 
-            st.download_button(
-                label="📥 Download updated file",
-                data=df_projects.to_csv(index=False).encode('utf-8'),
-                file_name="project_data_with_calculations.csv",
-                mime="text/csv"
-            )
+            tarifas_acima_400 = [
+                {'faixa_kWp': 10, 'fit_tarifa': 12.99},
+                {'faixa_kWp': 30, 'fit_tarifa': 10.96},
+                {'faixa_kWp': 60, 'fit_tarifa': 12.47},
+                {'faixa_kWp': 300, 'fit_tarifa': 10.63},
+                {'faixa_kWp': float('inf'), 'fit_tarifa': 9.36}
+            ]
+
+            def calcular_fit_tarifa(tamanho):
+                total_tarifa = 0
+                restante = tamanho
+                faixas = tarifas_ate_400 if tamanho <= 400 else tarifas_acima_400
+
+                for faixa in faixas:
+                    if restante > 0:
+                        kWp_faixa = min(faixa['faixa_kWp'], restante)
+                        total_tarifa += kWp_faixa * faixa['fit_tarifa']
+                        restante -= kWp_faixa
+
+                tarifa_media = total_tarifa / tamanho
+                return round(tarifa_media, 2)
+
+            if "Tamanho_kWp" in df.columns:
+                df["FIT_Tarifa_2025 (ct/kWh)"] = df["Tamanho_kWp"].apply(calcular_fit_tarifa)
+                st.success("✅ FIT tariff successfully calculated for all projects.")
+                st.dataframe(df)
+
+                # Download
+                st.download_button(
+                    label="📥 Download FIT tariff results",
+                    data=df.to_excel(index=False, engine='openpyxl'),
+                    file_name="projetos_fit_2025_calculado.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+            else:
+                st.error("❌ Column 'Tamanho_kWp' not found in uploaded file.")
     else:
-        st.warning("This section is protected. Please enter the correct password to continue.")
+        st.warning("This section is protected. Please enter the correct password.")
 
 
