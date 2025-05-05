@@ -9,32 +9,17 @@ import time
 st.set_page_config(layout="wide")
 st.title("🌻 Helianthus – ENTSO-E Dashboard")
 
-st.markdown(
-    '''
-    Welcome to the **Helianthus Energy Dashboard**.  
-    Explore ENTSO-E public data for selected European countries:
+# Sidebar com navegação
+sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info"]
+selected_section = st.sidebar.selectbox("🔍 Select section", sections)
 
-    - 🔆 Generation by source  
-    - 🔋 Total electricity load  
-    - 💶 Day-ahead market prices
+api_key = st.sidebar.text_input("🔐 ENTSO-E token", type="password")
 
-    > Developed by **Kenia Silverio**  
-    👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
-    '''
-)
-
-api_key = st.text_input("🔐 Enter your ENTSO-E token:", type="password")
-
-# 📅 Date range input
 today = datetime.now()
 default_start = today - timedelta(days=7)
-start_date, end_date = st.date_input("📅 Select date range", value=(default_start, today), max_value=today)
+start_date, end_date = st.sidebar.date_input("📅 Date range", value=(default_start, today), max_value=today)
 
-# Convert to timezone
-start = pd.Timestamp(start_date, tz="Europe/Brussels")
-end = pd.Timestamp(end_date + timedelta(days=1), tz="Europe/Brussels")
-
-# Country mapping
+# Country selection
 country_codes = {
     "Portugal": "PT",
     "Spain": "ES",
@@ -44,8 +29,10 @@ country_codes = {
     "Belgium": "BE",
     "Netherlands": "NL"
 }
+selected_countries = st.sidebar.multiselect("🌍 Countries", list(country_codes.keys()), default=["Portugal", "Spain", "France", "Germany"])
 
-selected_countries = st.multiselect("🌍 Select countries", list(country_codes.keys()), default=["Portugal", "Spain", "France", "Germany"])
+start = pd.Timestamp(start_date, tz="Europe/Brussels")
+end = pd.Timestamp(end_date + timedelta(days=1), tz="Europe/Brussels")
 
 def try_multiple_times(function, attempts=2, wait=2):
     for i in range(attempts):
@@ -102,56 +89,90 @@ def fetch_price(client, name, code):
         st.warning(f"⚠️ Price – {name}: {e}")
         return pd.DataFrame()
 
-if api_key and selected_countries:
+# Dashboard básico
+if selected_section == "📊 Dashboard":
+    st.markdown(
+        '''
+        Welcome to the **Helianthus Energy Dashboard**.  
+        Explore ENTSO-E data for:
+        - Generation by source 🔆  
+        - Electricity load 🔋  
+        - Day-ahead market prices 💶  
+
+        > Created by **Kenia Silverio**  
+        👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
+        '''
+    )
+
+elif selected_section == "🔆 Generation" and api_key:
     client = EntsoePandasClient(api_key=api_key)
+    generation_data = [fetch_generation(client, name, country_codes[name]) for name in selected_countries]
+    df_gen = pd.concat([df for df in generation_data if not df.empty], ignore_index=True)
+    if not df_gen.empty:
+        st.subheader("🔆 Generation by source")
+        fig = px.area(df_gen, x="Datetime", y="MW", color="Source", facet_col="Country", title="Electricity Generation")
+        st.plotly_chart(fig, use_container_width=True)
+        csv = df_gen.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Download Generation CSV", csv, "generation.csv", "text/csv")
 
-    st.markdown("### 🌻 Select the data you want to load:")
-    col1, col2, col3 = st.columns(3)
+elif selected_section == "🔋 Load" and api_key:
+    client = EntsoePandasClient(api_key=api_key)
+    load_data = [fetch_load(client, name, country_codes[name]) for name in selected_countries]
+    valid_loads = [df for df in load_data if not df.empty]
+    if valid_loads:
+        df_load = pd.concat(valid_loads, ignore_index=True)
+        df_load["MW"] = df_load["MW"].apply(lambda x: float(str(x).strip("[]")))
+        df_load["Datetime"] = pd.to_datetime(df_load["Datetime"], utc=True)
+        st.subheader("🔋 Load by country")
+        fig = px.line(df_load, x="Datetime", y="MW", color="Country", title="Total Load", markers=True)
+        st.plotly_chart(fig, use_container_width=True)
+        csv = df_load.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Download Load CSV", csv, "load.csv", "text/csv")
 
-    # 🔆 Generation
-    if col1.button("🔆 Generation"):
-        generation_data = [fetch_generation(client, name, country_codes[name]) for name in selected_countries]
-        df_gen = pd.concat([df for df in generation_data if not df.empty], ignore_index=True)
-        if not df_gen.empty:
-            st.subheader("🔆 Generation by source")
-            fig = px.area(df_gen, x="Datetime", y="MW", color="Source", facet_col="Country", title="Electricity Generation")
-            st.plotly_chart(fig, use_container_width=True)
-            csv = df_gen.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Download Generation CSV", csv, "generation.csv", "text/csv")
-        else:
-            st.warning("No generation data returned.")
+elif selected_section == "💶 Day-Ahead Prices" and api_key:
+    client = EntsoePandasClient(api_key=api_key)
+    price_data = [fetch_price(client, name, country_codes[name]) for name in selected_countries]
+    valid_prices = [df for df in price_data if not df.empty]
+    if valid_prices:
+        df_price = pd.concat(valid_prices, ignore_index=True)
+        st.subheader("💶 Spot Market Prices")
+        fig = px.line(df_price, x=df_price.columns[0], y="Price (€/MWh)", color="Country", title="Day-Ahead Prices", markers=True)
+        st.plotly_chart(fig, use_container_width=True)
+        csv = df_price.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Download Price CSV", csv, "prices.csv", "text/csv")
 
-    # 🔋 Load
-    if col2.button("🔋 Load"):
-        load_data = [fetch_load(client, name, country_codes[name]) for name in selected_countries]
-        valid_loads = [df for df in load_data if not df.empty]
-        if valid_loads:
-            df_load = pd.concat(valid_loads, ignore_index=True)
+elif selected_section == "ℹ️ EEG Info":
+    st.subheader("ℹ️ Feed-in Tariff – EEG 2025 (Germany)")
 
-            # ✅ Correções para colunas
-            df_load["MW"] = df_load["MW"].apply(lambda x: float(str(x).strip("[]")))
-            df_load["Datetime"] = pd.to_datetime(df_load["Datetime"], utc=True)
+    if st.button("📄 Show FIT Table"):
+        st.markdown(
+            """
+            ### ⚡ Feed-in Tariff (EEG) – Germany (Feb to Jul 2025)
 
-            st.subheader("🔋 Load by country")
-            fig = px.line(df_load, x="Datetime", y="MW", color="Country", title="Total Load", markers=True)
-            st.plotly_chart(fig, use_container_width=True)
-            csv = df_load.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Download Load CSV", csv, "load.csv", "text/csv")
-        else:
-            st.warning("No load data returned.")
+            | System Size           | Injection Type         | Tariff (ct/kWh) |
+            |-----------------------|------------------------|-----------------|
+            | Up to 10 kWp          | Partial (self-consumed)| 7.94            |
+            |                       | Total (fully injected) | 12.60           |
+            | 10 to 40 kWp          | Partial                | 6.88            |
+            |                       | Total                  | 10.56           |
+            | 40 to 100 kWp         | Partial                | 5.62            |
+            |                       | Total                  | 10.56           |
 
-    # 💶 Day-Ahead Price
-    if col3.button("💶 Day-Ahead Prices"):
-        price_data = [fetch_price(client, name, country_codes[name]) for name in selected_countries]
-        valid_prices = [df for df in price_data if not df.empty]
-        if valid_prices:
-            df_price = pd.concat(valid_prices, ignore_index=True)
-            st.subheader("💶 Spot Market Prices by Country")
-            fig = px.line(df_price, x=df_price.columns[0], y="Price (€/MWh)", color="Country", title="Day-Ahead Prices", markers=True)
-            st.plotly_chart(fig, use_container_width=True)
-            csv = df_price.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Download Price CSV", csv, "prices.csv", "text/csv")
-        else:
-            st.warning("No price data returned.")
+            **Notes:**
+            - "Partial" = self-consumption with excess fed into the grid.
+            - "Total" = full injection to the grid.
+            - Tariffs are guaranteed for 20 years.
+            - Updated every 6 months by BNetzA.
+            - Future adjustments may apply (e.g., +1.5 ct/kWh in the "Solarpaket I").
+
+            ---
+
+            🔗 **Official sources**:
+            - [BNetzA – EEG Förderhöhe](https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html)
+            - [EEG Tariff Overview (PDF)](https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/ErneuerbareEnergien/Photovoltaik/ZubauzahlenPV_EEG/EEG-VergSaetze.pdf)
+            """,
+            unsafe_allow_html=True
+        )
+
 else:
-    st.info("Please enter your ENTSO-E token and select at least one country.")
+    st.info("Enter your ENTSO-E token and select a section to begin.")
