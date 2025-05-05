@@ -15,7 +15,7 @@ st.set_page_config(layout="wide")
 st.title("🌻 Helianthus – ENTSO-E + Solar Insights")
 
 # Sidebar menu
-sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info", "🌞 PVGIS Monthly"]
+sections = ["📊 Dashboard", "🔆 Generation", "🔋 Load", "💶 Day-Ahead Prices", "ℹ️ EEG Info", "🌞 PVGIS Monthly", "☀️ PVGIS Overview"]
 selected_section = st.sidebar.selectbox("🔍 Select section", sections)
 
 api_key = st.sidebar.text_input("🔐 ENTSO-E token", type="password")
@@ -163,3 +163,26 @@ elif selected_section == "🌞 PVGIS Monthly":
     with col2:
         st.markdown(f"### 📋 Irradiation Table – {selected_city}")
         st.dataframe(df_irr.style.format({"Irradiation (kWh/m²)": "{:.1f}"}), use_container_width=True)
+
+elif selected_section == "☀️ PVGIS Overview":
+    import streamlit.components.v1 as components
+
+    st.subheader("☀️ Solar Irradiation Overview – Germany")
+
+    # Dados simulados
+    data = {
+        "City": ["Berlin", "Hamburg", "Munich", "Frankfurt", "Cologne"],
+        "Irradiation (kWh/m²)": [118.4, 109.6, 126.7, 122.1, 115.9]
+    }
+    df = pd.DataFrame(data)
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        st.markdown("### 🗺️ Map of Monthly Solar Irradiation")
+        components.iframe("pvgis_overview_map.html", height=600)
+
+    with col2:
+        st.markdown("### 📋 Comparison Table")
+        st.dataframe(df.sort_values("Irradiation (kWh/m²)", ascending=False), use_container_width=True)
+
