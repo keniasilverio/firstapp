@@ -101,8 +101,11 @@ if selected_section == "📊 Dashboard":
         - 🔆 Generation mix  
         - 🔋 Electricity load  
         - 💶 Day-ahead prices  
-        - 🌞 Monthly irradiation potential  
         - ℹ️ EEG (FIT) incentives for rooftop solar  
+        - ☀️ PVGIS Overview
+        - 🌞 PVGIS Monthly
+        - 🔐 Project Management
+       
 
         > Created by **Kenia Silverio**  
         👉 [LinkedIn](https://www.linkedin.com/in/kenia-silverio/)
